@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Say R</title>
+  <style>
+    :root {
+      font-family: ui-rounded, "SF Pro Rounded", "Nunito", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #17233f;
+      background: #f7f4ed;
+      font-synthesis: none;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    main {
+      width: min(720px, 100%);
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 7vw, 3.5rem);
+      letter-spacing: -0.04em;
+    }
+
+    .subtitle {
+      margin: 8px 0 28px;
+      color: #5d6678;
+      font-size: 1rem;
+    }
+
+    fieldset {
+      margin: 0 auto 22px;
+      padding: 0;
+      border: 0;
+    }
+
+    legend {
+      margin-bottom: 10px;
+      color: #5d6678;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .difficulty-options {
+      display: inline-grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      padding: 6px;
+      border: 1px solid #d8d4ca;
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    .difficulty-options input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .difficulty-options label {
+      min-width: 84px;
+      padding: 10px 14px;
+      border-radius: 9px;
+      color: #465066;
+      font-weight: 750;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .difficulty-options input:checked + label {
+      color: #fff;
+      background: #3659b5;
+    }
+
+    .difficulty-options input:focus-visible + label {
+      outline: 3px solid #f5a623;
+      outline-offset: 2px;
+    }
+
+    .sentence-card {
+      min-height: 250px;
+      display: grid;
+      place-items: center;
+      padding: clamp(28px, 7vw, 54px);
+      border: 1px solid #ded9cf;
+      border-radius: 24px;
+      background: #fff;
+      box-shadow: 0 16px 45px rgba(36, 43, 63, 0.09);
+    }
+
+    #sentence {
+      margin: 0;
+      font-size: clamp(1.75rem, 5.5vw, 2.75rem);
+      font-weight: 720;
+      line-height: 1.32;
+      letter-spacing: -0.025em;
+    }
+
+    mark {
+      margin: 0 -0.03em;
+      padding: 0 0.08em 0.05em;
+      border-radius: 0.18em;
+      color: inherit;
+      background: #ffe37e;
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
+    }
+
+    #new-sentence {
+      width: min(360px, 100%);
+      margin-top: 22px;
+      padding: 16px 24px;
+      border: 0;
+      border-radius: 14px;
+      color: #fff;
+      background: #17233f;
+      font: inherit;
+      font-size: 1.1rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 5px 0 #090f20;
+      transition: transform 100ms ease, box-shadow 100ms ease, background 100ms ease;
+    }
+
+    #new-sentence:hover {
+      background: #273758;
+    }
+
+    #new-sentence:active {
+      transform: translateY(4px);
+      box-shadow: 0 1px 0 #090f20;
+    }
+
+    #new-sentence:focus-visible {
+      outline: 3px solid #f5a623;
+      outline-offset: 4px;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        align-items: start;
+        padding: 28px 16px;
+      }
+
+      .subtitle {
+        margin-bottom: 22px;
+      }
+
+      .difficulty-options {
+        width: 100%;
+      }
+
+      .difficulty-options label {
+        min-width: 0;
+        padding-inline: 8px;
+      }
+
+      .sentence-card {
+        min-height: 230px;
+        border-radius: 20px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #new-sentence {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Say R</h1>
+    <p class="subtitle">Read the silly sentence out loud.</p>
+
+    <fieldset>
+      <legend>Difficulty</legend>
+      <div class="difficulty-options">
+        <input type="radio" name="difficulty" id="easy" value="easy">
+        <label for="easy">Easy</label>
+
+        <input type="radio" name="difficulty" id="mixed" value="mixed" checked>
+        <label for="mixed">Mixed</label>
+
+        <input type="radio" name="difficulty" id="hard" value="hard">
+        <label for="hard">Hard</label>
+      </div>
+    </fieldset>
+
+    <section class="sentence-card" aria-label="Practice sentence">
+      <p id="sentence" aria-live="polite"></p>
+    </section>
+
+    <button id="new-sentence" type="button">New sentence</button>
+  </main>
+
+  <noscript>This page needs JavaScript to make new sentences.</noscript>
+
+  <script>
+    "use strict";
+
+    // Asterisks mark the R-practice words that will be highlighted.
+    // These are deliberately hand-written rather than assembled from random parts.
+    const sentences = {
+      easy: [
+        "The *cheerful* *deer* put on *purple* pajamas at *dinner*.",
+        "The *nervous* *bird* *served* *cereal* to the *teacher*.",
+        "A *weird* *hamster* *heard* the *mirror* *whisper*.",
+        "The *furry* *monster* *cheered* when my *sister* *discovered* a *sweater*.",
+        "The *bearded* *surfer* *turned* a *burger* into *dessert*.",
+        "A *thirsty* *wizard* *searched* for a *fern* *under* the *teacher's* desk.",
+        "The *deer* *heard* the *steer* *whisper* *near* the *pier*.",
+        "The *perfect* *mermaid* *covered* *her* *earrings* with *butter*.",
+        "The *drummer* *feared* the *hamster* living in his *sweater*.",
+        "My *sister* *measured* a *burger* with a *mirror* *after* *dinner*.",
+        "The *cheerful* *teacher* *discovered* a *bird* *under* a *winter* coat.",
+        "A *weird* *surfer* *served* *turnips* *near* the *pier*.",
+        "The *fearful* *hamster* *cheered* as the *furry* *monster* danced.",
+        "A *nervous* *mermaid* *whispered* to a *deer* *during* *dinner*.",
+        "The *bearded* *wizard* *heard* a *bird* sing *under* the *mirror*.",
+        "The *perfect* *drummer* *turned* the *teacher's* *sweater* inside out.",
+        "Some *cereal* *near* the *mirror* made my *sister* *nervous*.",
+        "The *purple* *hamster* *discovered* a *fern* inside a *burger*.",
+        "The *teacher* found *her* *earring* *under* the *dinner* table.",
+        "A *furry* *bird* *feared* the *weird* *beard* in the *mirror*.",
+        "The *surfer* *served* *cereal* to a *monster* *during* *winter*.",
+        "My *sister* *heard* a *mermaid* *cheer* *near* noon.",
+        "The *thirsty* *deer* *turned* a *fern* into a *perfect* hat.",
+        "A *nervous* *teacher* *discovered* a *hamster* in the *freezer*."
+      ],
+      mixed: [
+        "A *nervous* *pirate* put on *purple* *earmuffs*, then *steered* a *cart*.",
+        "The *cheerful* *bear* *served* *burgers* at the *fair*.",
+        "A *deer* *parked* a *cart* *near* the *pier* at *dinner*.",
+        "The *purple* *vampire* *feared* the *fire* in the *mirror*.",
+        "The *teacher* found a *hairy* *pear* hiding *under* a *chair*.",
+        "A *furry* *shark* *wore* a *scarf* *during* *dinner*.",
+        "The *mermaid* *shared* *cereal* with a *dinosaur* at the *shore*.",
+        "A *thirsty* *horse* *carried* a *burger* to the *barn*.",
+        "The *weird* *pirate* *parked* a *purple* *scooter* by the *fire*.",
+        "My *sister* *scared* a *bear* with a *sparkly* *jar*.",
+        "The *nervous* *hamster* *wore* a *scarf* to the *fair*.",
+        "A *cheerful* *farmer* *discovered* *corn* *under* his *sweater*.",
+        "The *bird* *stared* at a *vampire* *near* the *campfire*.",
+        "A *teacher* *carried* a *fiery* cake onto the *porch*.",
+        "The *furry* *monster* *snored* through a *stormy* *morning*.",
+        "A *mermaid* *wore* a *square* hat on the *pier*.",
+        "The *bearded* *dinosaur* *shared* a *pear* with my *sister*.",
+        "A *tired* *bear* *heard* a *bird* *near* the *barn*.",
+        "The *surfer* found a *hair* in his *burger* at the *park*.",
+        "A *purple* *horse* *admired* a *star* at *dinner*.",
+        "The *vampire* *served* *popcorn* to the *teacher* at the *shore*.",
+        "A *scary* *fairy* *steered* a *cart* through the *park*.",
+        "The *deer* *carried* *firewood* to the *farmer's* *barn*.",
+        "A *cheerful* *pirate* hid a *guitar* *under* the *stairs*."
+      ],
+      hard: [
+        "The *world's* *worst* *squirrel* *hurled* a *pearl* at a walrus.",
+        "A *curly* *girl* *twirled* around the *world* in a *purple* *skirt*.",
+        "The *squirrel* *curled* up beside a *pearl* *during* a *thunderstorm*.",
+        "The *girl* *tried* to *twirl* *thirty* *pearls* *before* breakfast.",
+        "An *early* *bird* *hurled* *corn* across the *world*.",
+        "A *purple* *squirrel* *wore* a *pearl* necklace to surprise the *girl*.",
+        "The *world's* *curliest* *squirrel* *twirled* on a *surfboard*.",
+        "A *girl* with *curly* *hair* found a *pearl* in *her* *cereal*.",
+        "The *squirrel* *hurled* a *burger* *over* the *world's* smallest *barn*.",
+        "An *early* *bird* *twirled* a *scarf* around the *startled* *farmer*.",
+        "A *curly-haired* *girl* *carried* a *pearl* through the *storm*.",
+        "The *squirrel* *curled* up inside a *purple* *jar* *during* the *storm*.",
+        "The *girl* *hurled* *popcorn* at a *squirrel* *wearing* *pearls*.",
+        "A *pearl* rolled around the *world* while the *squirrel* *snored*.",
+        "The *curly* *squirrel* *twirled* beside the *world's* *largest* *fire*.",
+        "The *girl* *wore* *thirty* *pearls* while *steering* a *cart*.",
+        "The *squirrel* *hurled* a *pearl* into the *farmer's* *corn*.",
+        "The *world's* *earliest* *bird* *curled* up *near* the *fire*.",
+        "A *curly* *girl* *shared* *her* *pear* with a *squirrel*.",
+        "The *squirrel* *twirled* a *fork* while the *girl* *stirred* *corn*.",
+        "The *girl* *carried* three *pearls* around the *world*.",
+        "A *curly* *squirrel* *wore* a *scarf* made of *pearls*.",
+        "An *early* *bird* *startled* the *girl* by *hurling* a *pearl*.",
+        "The *world's* smallest *squirrel* *curled* up beside a *roaring* *fire*."
+      ]
+    };
+
+    const sentenceElement = document.querySelector("#sentence");
+    const newSentenceButton = document.querySelector("#new-sentence");
+    const difficultyInputs = document.querySelectorAll('input[name="difficulty"]');
+    const decks = { easy: [], mixed: [], hard: [] };
+    const lastShown = { easy: null, mixed: null, hard: null };
+
+    function shuffled(items) {
+      const result = [...items];
+      for (let index = result.length - 1; index > 0; index -= 1) {
+        const other = Math.floor(Math.random() * (index + 1));
+        [result[index], result[other]] = [result[other], result[index]];
+      }
+      return result;
+    }
+
+    function escapeHtml(value) {
+      return value.replace(/[&<>"]/g, (character) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;"
+      })[character]);
+    }
+
+    function renderSentence(sentence) {
+      return sentence
+        .split("*")
+        .map((part, index) => index % 2 === 1
+          ? `<mark>${escapeHtml(part)}</mark>`
+          : escapeHtml(part))
+        .join("");
+    }
+
+    function nextSentence(difficulty) {
+      if (decks[difficulty].length === 0) {
+        decks[difficulty] = shuffled(sentences[difficulty]);
+        if (decks[difficulty][decks[difficulty].length - 1] === lastShown[difficulty]) {
+          [decks[difficulty][0], decks[difficulty][decks[difficulty].length - 1]] =
+            [decks[difficulty][decks[difficulty].length - 1], decks[difficulty][0]];
+        }
+      }
+
+      const sentence = decks[difficulty].pop();
+      lastShown[difficulty] = sentence;
+      return sentence;
+    }
+
+    function selectedDifficulty() {
+      return document.querySelector('input[name="difficulty"]:checked').value;
+    }
+
+    function showNewSentence() {
+      const sentence = nextSentence(selectedDifficulty());
+      sentenceElement.innerHTML = renderSentence(sentence);
+    }
+
+    function validateContent() {
+      for (const difficulty of ["easy", "mixed", "hard"]) {
+        if (sentences[difficulty].length !== 24) {
+          throw new Error(`${difficulty} should contain exactly 24 sentences.`);
+        }
+
+        if (new Set(sentences[difficulty]).size !== sentences[difficulty].length) {
+          throw new Error(`${difficulty} contains a duplicate sentence.`);
+        }
+
+        for (const sentence of sentences[difficulty]) {
+          const markers = (sentence.match(/\*/g) || []).length;
+          const targetCount = markers / 2;
+          if (markers % 2 !== 0 || targetCount < 3 || targetCount > 6) {
+            throw new Error(`${difficulty} has a sentence with invalid target markup: ${sentence}`);
+          }
+        }
+      }
+    }
+
+    newSentenceButton.addEventListener("click", showNewSentence);
+    difficultyInputs.forEach((input) => input.addEventListener("change", showNewSentence));
+
+    validateContent();
+    showNewSentence();
+  </script>
+</body>
+</html>
