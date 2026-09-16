@@ -120,6 +120,36 @@
       -webkit-box-decoration-break: clone;
     }
 
+    .sentence-card.highlights-off mark {
+      margin: 0;
+      padding: 0;
+      background: transparent;
+    }
+
+    .highlight-control {
+      width: fit-content;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 13px auto 0;
+      color: #697184;
+      font-size: 0.88rem;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .highlight-control input {
+      width: 16px;
+      height: 16px;
+      margin: 0;
+      accent-color: #3659b5;
+    }
+
+    .highlight-control input:focus-visible {
+      outline: 3px solid #f5a623;
+      outline-offset: 2px;
+    }
+
     #new-sentence {
       width: min(360px, 100%);
       margin-top: 22px;
@@ -204,6 +234,11 @@
     <section class="sentence-card" aria-label="Practice sentence">
       <p id="sentence" aria-live="polite"></p>
     </section>
+
+    <label class="highlight-control">
+      <input id="highlight-toggle" type="checkbox" checked>
+      Highlight R words
+    </label>
 
     <button id="new-sentence" type="button">New sentence</button>
   </main>
@@ -297,7 +332,9 @@
     };
 
     const sentenceElement = document.querySelector("#sentence");
+    const sentenceCard = document.querySelector(".sentence-card");
     const newSentenceButton = document.querySelector("#new-sentence");
+    const highlightToggle = document.querySelector("#highlight-toggle");
     const difficultyInputs = document.querySelectorAll('input[name="difficulty"]');
     const decks = { easy: [], mixed: [], hard: [] };
     const lastShown = { easy: null, mixed: null, hard: null };
@@ -352,6 +389,10 @@
       sentenceElement.innerHTML = renderSentence(sentence);
     }
 
+    function updateHighlighting() {
+      sentenceCard.classList.toggle("highlights-off", !highlightToggle.checked);
+    }
+
     function validateContent() {
       for (const difficulty of ["easy", "mixed", "hard"]) {
         if (sentences[difficulty].length !== 24) {
@@ -373,9 +414,11 @@
     }
 
     newSentenceButton.addEventListener("click", showNewSentence);
+    highlightToggle.addEventListener("change", updateHighlighting);
     difficultyInputs.forEach((input) => input.addEventListener("change", showNewSentence));
 
     validateContent();
+    updateHighlighting();
     showNewSentence();
   </script>
 </body>
