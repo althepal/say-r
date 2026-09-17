@@ -87,7 +87,7 @@ remain obvious in the final square.
 - `hamster-scarf-fair.webp` — “The nervous hamster wore a scarf to the fair because its tail felt bare.” Show the scarf wrapped around the hamster and its tail at a colorful fair.
 - `bird-vampire-campfire.webp` — “A bird stared at a vampire by the campfire until they both felt awkward.” Show the bird and child-friendly vampire exchanging an awkward stare across the fire.
 - `monster-storm-popcorn.webp` — “The furry monster snored through a stormy morning, waking the popcorn.” Show the sleeping monster and surprised, expressive popcorn during a rainstorm.
-- `surfer-hair-burger.webp` — “The surfer found a hair in his burger at the park and asked for its manager.” Show the surfer lifting the hair from a burger that wears a tiny manager's tie.
+- `surfer-hair-burger.webp` — “The surfer found a hair in his burger at the park and asked for the manager.” Show the surfer lifting the hair from the burger at a park food stand.
 - `purple-horse-star-dessert.webp` — “A purple horse admired a star at dinner until dessert arrived.” Show the horse, star, dinner setting, and spectacular dessert arriving on a cart.
 
 ### Hard

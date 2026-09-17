@@ -42,6 +42,95 @@
       font-size: 1rem;
     }
 
+    .sentence-search {
+      width: min(520px, 100%);
+      margin: -14px auto 22px;
+      color: #5d6678;
+      font-size: 0.9rem;
+    }
+
+    .sentence-search summary {
+      display: inline-block;
+      padding: 5px 8px;
+      border-radius: 7px;
+      cursor: pointer;
+      list-style: none;
+      user-select: none;
+    }
+
+    .sentence-search summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .sentence-search summary::before {
+      content: "⌕";
+      margin-right: 6px;
+      font-size: 1.05em;
+    }
+
+    .sentence-search summary:hover,
+    .sentence-search[open] summary {
+      color: #3659b5;
+      background: #edf1fb;
+    }
+
+    .sentence-search summary:focus-visible,
+    #sentence-search-input:focus-visible,
+    .search-result:focus-visible {
+      outline: 3px solid #f5a623;
+      outline-offset: 2px;
+    }
+
+    .search-panel {
+      margin-top: 8px;
+      padding: 10px;
+      border: 1px solid #d8d4ca;
+      border-radius: 12px;
+      background: #fff;
+      box-shadow: 0 8px 24px rgba(36, 43, 63, 0.08);
+    }
+
+    #sentence-search-input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #c9c5bb;
+      border-radius: 8px;
+      color: #17233f;
+      background: #fff;
+      font: inherit;
+    }
+
+    .search-status {
+      margin: 7px 3px 0;
+      text-align: left;
+      font-size: 0.78rem;
+    }
+
+    .search-results {
+      display: grid;
+      gap: 4px;
+      max-height: 230px;
+      margin-top: 7px;
+      overflow-y: auto;
+    }
+
+    .search-result {
+      width: 100%;
+      padding: 8px 10px;
+      border: 0;
+      border-radius: 7px;
+      color: #26324d;
+      background: transparent;
+      font: inherit;
+      line-height: 1.3;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .search-result:hover {
+      background: #f4f6fb;
+    }
+
     fieldset {
       margin: 0 auto 22px;
       padding: 0;
@@ -318,13 +407,23 @@
     <h1>Say R!</h1>
     <p class="subtitle">Read the silly sentence out loud.</p>
 
+    <details class="sentence-search" id="sentence-search">
+      <summary>Find a sentence</summary>
+      <div class="search-panel">
+        <label for="sentence-search-input">Search all sentences</label>
+        <input id="sentence-search-input" type="search" autocomplete="off" placeholder="Try squirrel, cereal, or fire">
+        <p class="search-status" id="search-status" aria-live="polite">Type a word or phrase.</p>
+        <div class="search-results" id="search-results"></div>
+      </div>
+    </details>
+
     <fieldset>
       <legend>Difficulty</legend>
       <div class="difficulty-options">
-        <input type="radio" name="difficulty" id="easy" value="easy">
+        <input type="radio" name="difficulty" id="easy" value="easy" checked>
         <label for="easy">Easy</label>
 
-        <input type="radio" name="difficulty" id="mixed" value="mixed" checked>
+        <input type="radio" name="difficulty" id="mixed" value="mixed">
         <label for="mixed">Mixed</label>
 
         <input type="radio" name="difficulty" id="hard" value="hard">
@@ -415,7 +514,7 @@
         "A *mermaid* *wore* a *square* hat on the *pier*, and a fashion *reporter* called it *perfect*.",
         "The *bearded* *dinosaur* *shared* a *pear* with my *sister*, then ate the *silverware*.",
         "A *tired* *bear* *heard* a *bird* by the *barn* and *ordered* fluffy *earplugs*.",
-        "The *surfer* found a *hair* in his *burger* at the *park* and asked *for* its *manager*.",
+        "The *surfer* found a *hair* in his *burger* at the *park* and asked *for* the *manager*.",
         "A *purple* *horse* *admired* a *star* at *dinner* until *dessert* *arrived*.",
         "The *vampire* *served* *popcorn* to the *teacher* at the *shore* *during* sunrise.",
         "A *scary fairy* *steered* a *cart* through the *park* *toward* a *purple carousel*.",
@@ -702,6 +801,10 @@
     const favoritesOnlyToggle = document.querySelector("#favorites-only-toggle");
     const favoriteCount = document.querySelector("#favorite-count");
     const highlightToggle = document.querySelector("#highlight-toggle");
+    const searchDetails = document.querySelector("#sentence-search");
+    const searchInput = document.querySelector("#sentence-search-input");
+    const searchStatus = document.querySelector("#search-status");
+    const searchResults = document.querySelector("#search-results");
     const difficultyInputs = document.querySelectorAll('input[name="difficulty"]');
     const decks = { easy: [], mixed: [], hard: [] };
     const lastShown = { easy: null, mixed: null, hard: null };
@@ -715,7 +818,15 @@
     let illustrationDeck = [];
     let lastIllustration = null;
     const favoriteStorageKey = "say-r-favorites-v1";
+    const difficultyStorageKey = "say-r-difficulty-v1";
     const availableSentences = new Set(Object.values(sentences).flat());
+    const searchableSentences = Object.entries(sentences).flatMap(([difficulty, entries]) =>
+      entries.map((sentence) => ({
+        difficulty,
+        sentence,
+        plainText: sentence.replaceAll("*", "")
+      }))
+    );
     let favorites = loadFavorites();
     let favoriteDeck = [];
     let lastFavorite = null;
@@ -762,6 +873,23 @@
         localStorage.setItem(favoriteStorageKey, JSON.stringify([...favorites]));
       } catch {
         // Favorites still work for this visit if browser storage is unavailable.
+      }
+    }
+
+    function loadDifficulty() {
+      try {
+        const saved = localStorage.getItem(difficultyStorageKey);
+        return ["easy", "mixed", "hard"].includes(saved) ? saved : "easy";
+      } catch {
+        return "easy";
+      }
+    }
+
+    function saveDifficulty(difficulty) {
+      try {
+        localStorage.setItem(difficultyStorageKey, difficulty);
+      } catch {
+        // The selected difficulty still works for this visit if storage is unavailable.
       }
     }
 
@@ -833,17 +961,60 @@
       return document.querySelector('input[name="difficulty"]:checked').value;
     }
 
-    function showNewSentence() {
-      if (favoritesOnlyToggle.checked) {
-        currentSentence = nextFavoriteSentence();
-      } else if (picturesOnlyToggle.checked) {
-        currentSentence = nextPicturedSentence(selectedDifficulty());
-      } else {
-        currentSentence = nextSentence(selectedDifficulty());
-      }
+    function showSentence(sentence) {
+      currentSentence = sentence;
       sentenceElement.innerHTML = renderSentence(currentSentence);
       updateIllustration(currentSentence);
       updateFavoriteControls();
+    }
+
+    function showNewSentence() {
+      let sentence;
+      if (favoritesOnlyToggle.checked) {
+        sentence = nextFavoriteSentence();
+      } else if (picturesOnlyToggle.checked) {
+        sentence = nextPicturedSentence(selectedDifficulty());
+      } else {
+        sentence = nextSentence(selectedDifficulty());
+      }
+      showSentence(sentence);
+    }
+
+    function showSearchResult({ difficulty, sentence }) {
+      picturesOnlyToggle.checked = false;
+      favoritesOnlyToggle.checked = false;
+      difficultyInputs.forEach((input) => {
+        input.checked = input.value === difficulty;
+      });
+      saveDifficulty(difficulty);
+      showSentence(sentence);
+      searchDetails.open = false;
+    }
+
+    function updateSearchResults() {
+      const query = searchInput.value.trim().toLocaleLowerCase();
+      searchResults.replaceChildren();
+
+      if (query === "") {
+        searchStatus.textContent = "Type a word or phrase.";
+        return;
+      }
+
+      const matches = searchableSentences.filter(({ plainText }) =>
+        plainText.toLocaleLowerCase().includes(query)
+      );
+      searchStatus.textContent = matches.length === 1
+        ? "1 matching sentence."
+        : `${matches.length} matching sentences.`;
+
+      matches.slice(0, 8).forEach((match) => {
+        const button = document.createElement("button");
+        button.className = "search-result";
+        button.type = "button";
+        button.textContent = match.plainText;
+        button.addEventListener("click", () => showSearchResult(match));
+        searchResults.append(button);
+      });
     }
 
     function updateHighlighting() {
@@ -942,9 +1113,22 @@
       showNewSentence();
     });
     highlightToggle.addEventListener("change", updateHighlighting);
-    difficultyInputs.forEach((input) => input.addEventListener("change", showNewSentence));
+    searchInput.addEventListener("input", updateSearchResults);
+    searchDetails.addEventListener("toggle", () => {
+      if (searchDetails.open) {
+        searchInput.focus();
+      }
+    });
+    difficultyInputs.forEach((input) => input.addEventListener("change", () => {
+      saveDifficulty(input.value);
+      showNewSentence();
+    }));
 
     validateContent();
+    const savedDifficulty = loadDifficulty();
+    difficultyInputs.forEach((input) => {
+      input.checked = input.value === savedDifficulty;
+    });
     updateHighlighting();
     showNewSentence();
   </script>
