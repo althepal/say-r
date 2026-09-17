@@ -26,7 +26,7 @@
     }
 
     main {
-      width: min(720px, 100%);
+      width: min(960px, 100%);
       text-align: center;
     }
 
@@ -91,15 +91,44 @@
       outline-offset: 2px;
     }
 
+    .difficulty-options input:disabled + label {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
     .sentence-card {
-      min-height: 250px;
+      position: relative;
       display: grid;
-      place-items: center;
-      padding: clamp(28px, 7vw, 54px);
+      grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
+      min-height: 330px;
+      overflow: hidden;
       border: 1px solid #ded9cf;
       border-radius: 24px;
       background: #fff;
       box-shadow: 0 16px 45px rgba(36, 43, 63, 0.09);
+    }
+
+    .sentence-copy {
+      min-height: 330px;
+      display: grid;
+      place-items: center;
+      padding: clamp(42px, 6vw, 64px);
+    }
+
+    .illustration-frame {
+      width: 100%;
+      aspect-ratio: 1;
+      align-self: center;
+      margin: 0;
+      overflow: hidden;
+      background: #e9eef5;
+    }
+
+    #illustration {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
     }
 
     #sentence {
@@ -120,34 +149,79 @@
       -webkit-box-decoration-break: clone;
     }
 
+    .favorite-toggle {
+      position: absolute;
+      top: 13px;
+      right: 13px;
+      z-index: 1;
+      width: 42px;
+      height: 42px;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      color: #7a8292;
+      background: rgba(255, 255, 255, 0.9);
+      font: inherit;
+      font-size: 1.75rem;
+      line-height: 1;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(23, 35, 63, 0.14);
+    }
+
+    .favorite-toggle:hover {
+      color: #b07300;
+      background: #fff7d6;
+    }
+
+    .favorite-toggle[aria-pressed="true"] {
+      color: #b07300;
+    }
+
+    .favorite-toggle:focus-visible {
+      outline: 3px solid #f5a623;
+      outline-offset: 2px;
+    }
+
     .sentence-card.highlights-off mark {
       margin: 0;
       padding: 0;
       background: transparent;
     }
 
-    .highlight-control {
-      width: fit-content;
+    .practice-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px 20px;
+      margin: 13px auto 0;
+    }
+
+    .small-control {
       display: flex;
       align-items: center;
       gap: 8px;
-      margin: 13px auto 0;
       color: #697184;
       font-size: 0.88rem;
       cursor: pointer;
       user-select: none;
     }
 
-    .highlight-control input {
+    .small-control input {
       width: 16px;
       height: 16px;
       margin: 0;
       accent-color: #3659b5;
     }
 
-    .highlight-control input:focus-visible {
+    .small-control input:focus-visible {
       outline: 3px solid #f5a623;
       outline-offset: 2px;
+    }
+
+    .small-control:has(input:disabled) {
+      opacity: 0.45;
+      cursor: not-allowed;
     }
 
     #new-sentence {
@@ -180,6 +254,24 @@
       outline-offset: 4px;
     }
 
+    @media (max-width: 720px) {
+      .sentence-card {
+        grid-template-columns: 1fr;
+      }
+
+      .sentence-copy {
+        min-height: 230px;
+      }
+
+      .illustration-frame {
+        width: min(100%, 420px);
+        min-height: 0;
+        height: auto;
+        margin: 0 auto 18px;
+        border-radius: 18px;
+      }
+    }
+
     @media (max-width: 480px) {
       body {
         align-items: start;
@@ -200,8 +292,17 @@
       }
 
       .sentence-card {
-        min-height: 230px;
         border-radius: 20px;
+      }
+
+      .sentence-copy {
+        padding: 42px 26px 32px;
+      }
+
+      .illustration-frame {
+        width: 100%;
+        margin-bottom: 0;
+        border-radius: 0;
       }
     }
 
@@ -232,15 +333,33 @@
     </fieldset>
 
     <section class="sentence-card" aria-label="Practice sentence">
-      <p id="sentence" aria-live="polite"></p>
+      <button class="favorite-toggle" id="favorite-toggle" type="button" aria-pressed="false" aria-label="Add sentence to favorites" title="Add sentence to favorites">☆</button>
+      <div class="sentence-copy">
+        <p id="sentence" aria-live="polite"></p>
+      </div>
+      <figure class="illustration-frame" aria-hidden="true">
+        <img id="illustration" alt="" decoding="async">
+      </figure>
     </section>
 
     <button id="new-sentence" type="button">New sentence</button>
 
-    <label class="highlight-control">
-      <input id="highlight-toggle" type="checkbox" checked>
-      Highlight R words
-    </label>
+    <div class="practice-controls">
+      <label class="small-control">
+        <input id="highlight-toggle" type="checkbox" checked>
+        Highlight R words
+      </label>
+
+      <label class="small-control">
+        <input id="pictures-only-toggle" type="checkbox">
+        Pictures only
+      </label>
+
+      <label class="small-control">
+        <input id="favorites-only-toggle" type="checkbox" disabled>
+        Favorites only (<span id="favorite-count">0</span>)
+      </label>
+    </div>
   </main>
 
   <noscript>This page needs JavaScript to make new sentences.</noscript>
@@ -291,53 +410,136 @@
         "The *nervous* *hamster* *wore* a *scarf* to the *fair* because its tail felt *bare*.",
         "A *cheerful* *farmer* *discovered* *corn* in his *sweater* and blamed the *scarecrow*.",
         "The *bird* *stared* at a *vampire* *near* the *campfire* until both felt *awkward*.",
-        "A *teacher* *carried* a *fiery* cake onto the *porch*; the candles screamed *first*.",
+        "A *teacher* *carried* a *fiery* cake onto the *porch*; the candles ordered a *fire extinguisher*.",
         "The *furry* *monster* *snored* through a *stormy* *morning*, waking the *popcorn*.",
-        "A *mermaid* *wore* a *square* hat on the *pier* and called it high fashion.",
+        "A *mermaid* *wore* a *square* hat on the *pier*; a fashion *reporter* called it *perfect*.",
         "The *bearded* *dinosaur* *shared* a *pear* with my *sister*, then ate the *silverware*.",
-        "A *tired* *bear* *heard* a *bird* *near* the *barn* and requested quiet.",
-        "The *surfer* found a *hair* in his *burger* at the *park* and asked it to leave.",
+        "A *tired* *bear* *heard* a *bird* by the *barn* and ordered fluffy *earplugs*.",
+        "The *surfer* found a *hair* in his *burger* at the *park* and asked for its *manager*.",
         "A *purple* *horse* *admired* a *star* at *dinner* until *dessert* arrived.",
         "The *vampire* *served* *popcorn* to the *teacher* at the *shore* *during* sunrise.",
-        "A *scary* *fairy* *steered* a *cart* through the *park*; it demanded a *parking* pass.",
-        "The *deer* *carried* *firewood* to the *farmer's* *barn*, but it complained.",
+        "A *scary fairy* *steered* a *cart* through the *park* toward a *purple carousel*.",
+        "The *deer* *carried* *firewood* to the *farmer's* *barn*, but it demanded a *driver*.",
         "A *cheerful* *pirate* hid a *guitar* *under* the *stairs*, then chose the wrong *stair*."
       ],
       hard: [
         "The *world's* *worst* *squirrel* *hurled* a *pearl* at a *walrus* in a bathrobe.",
         "A *curly-haired* *girl* *twirled* around the *world*, got dizzy, and blamed *her* *skirt*.",
-        "The *squirrel* *curled* up beside a *pearl* *during* a *thunderstorm* because lightning looked suspicious.",
-        "The *girl* *tried* to *twirl* *thirty* *pearls* *before* breakfast; breakfast won.",
+        "The *squirrel* *curled* up beside a *pearl* during a *thunderstorm* because the *weather* seemed rude.",
+        "The *girl* *tried* to *twirl* thirty *pearls* before breakfast; the *cereal* declared itself the *winner*.",
         "An *early* *bird* *hurled* *corn* across the *world* and missed the *Earth*.",
-        "A *purple* *squirrel* *wore* a *pearl* necklace to impress the *girl*; she yawned.",
-        "The *world's* *curliest* *squirrel* *twirled* on a *surfboard* while the waves applauded.",
-        "A *girl* with *curly* *hair* found a *pearl* in *her* *cereal* and blamed breakfast.",
+        "A *purple* *squirrel* *wore* a *pearl* necklace to impress the girl; she *preferred* a *burger*.",
+        "The *world's* *curliest* *squirrel* *twirled* on a *surfboard* while the waves demanded an *encore*.",
+        "A *curly-haired* *girl* found a *pearl* in *her* *cereal* and blamed the *server*.",
         "The *squirrel* *hurled* a *burger* past the *world's* smallest *barn* and called it *airmail*.",
         "An *early* *bird* *twirled* a *scarf* around a *farmer*; he thanked the *weather*.",
         "A *curly-haired* *girl* *carried* a *pearl* through the *storm* because the *purse* was full.",
         "The *squirrel* *curled* up inside a *purple* *jar* and called it a *resort*.",
-        "The *girl* *hurled* *popcorn* at a *squirrel* *wearing* *pearls*; it kept snacking.",
+        "The *girl* *hurled* *popcorn* at a *squirrel* wearing *pearls*; it asked for *more*.",
         "A *pearl* rolled around the *world* while the *squirrel* *snored* through the *entire* rescue.",
         "The *curly* *squirrel* *twirled* beside the *world's* *largest* *fire*.",
-        "The *girl* *wore* *thirty* *pearls* while *steering* a *cart*; it looked jealous.",
+        "The *girl* *wore* thirty *pearls* while *steering* a *cart*; the cart demanded *turning* lessons.",
         "The *squirrel* *hurled* a *pearl* into the *farmer's* *corn* and shouted, “*World record!*”",
-        "The *world's* *earliest* *bird* *curled* up *near* the *fire* and slept past breakfast.",
-        "A *curly* *girl* *shared* a *pear* with a *squirrel*, then demanded a receipt.",
+        "The *world's* *earliest* *bird* *curled* up near the *fire* and blamed the *weather* for oversleeping.",
+        "A *curly* *girl* *shared* a *pear* with a *squirrel*, then charged it a *quarter*.",
         "The *squirrel* *twirled* a *fork* while *stirring* *corn*; the *server* ducked.",
         "The *girl* *carried* three *pearls* around the *world* in a *purple* *purse*.",
-        "A *curly* *squirrel* *wore* a *scarf* made of *pearls* and felt extremely fancy.",
+        "A *curly* *squirrel* *wore* a *scarf* made of *pearls* and admired itself in the *mirror*.",
         "An *early* *bird* shocked the *girl* by *hurling* a *pearl* into the *cereal*.",
         "The *world's* smallest *squirrel* *curled* up beside the *fire* and *ordered* a tiny *burger*."
       ]
     };
 
+    const illustrations = [
+      {
+        src: "assets/illustrations/teacher-hamster-freezer.webp",
+        sentence: sentences.easy[1]
+      },
+      {
+        src: "assets/illustrations/monster-butter-mirror.webp",
+        sentence: sentences.easy[4]
+      },
+      {
+        src: "assets/illustrations/drummer-turnip-dessert.webp",
+        sentence: sentences.easy[3]
+      },
+      {
+        src: "assets/illustrations/surfer-hamster-shelter.webp",
+        sentence: sentences.easy[8]
+      },
+      {
+        src: "assets/illustrations/hamster-burger-fern.webp",
+        sentence: sentences.easy[17]
+      },
+      {
+        src: "assets/illustrations/pirate-pear-ticket.webp",
+        sentence: sentences.mixed[0]
+      },
+      {
+        src: "assets/illustrations/hairy-pear-haircut.webp",
+        sentence: sentences.mixed[4]
+      },
+      {
+        src: "assets/illustrations/shark-scarf-burger.webp",
+        sentence: sentences.mixed[5]
+      },
+      {
+        src: "assets/illustrations/dinosaur-pear-silverware.webp",
+        sentence: sentences.mixed[16]
+      },
+      {
+        src: "assets/illustrations/fairy-purple-carousel.webp",
+        sentence: sentences.mixed[21]
+      },
+      {
+        src: "assets/illustrations/squirrel-walrus.webp",
+        sentence: sentences.hard[0]
+      },
+      {
+        src: "assets/illustrations/girl-pearls-cereal.webp",
+        sentence: sentences.hard[3]
+      },
+      {
+        src: "assets/illustrations/early-bird-corn-earth.webp",
+        sentence: sentences.hard[4]
+      },
+      {
+        src: "assets/illustrations/squirrel-burger-airmail.webp",
+        sentence: sentences.hard[8]
+      },
+      {
+        src: "assets/illustrations/squirrel-fork-corn.webp",
+        sentence: sentences.hard[19]
+      }
+    ];
+
     const sentenceElement = document.querySelector("#sentence");
     const sentenceCard = document.querySelector(".sentence-card");
+    const illustrationElement = document.querySelector("#illustration");
     const newSentenceButton = document.querySelector("#new-sentence");
+    const favoriteToggle = document.querySelector("#favorite-toggle");
+    const picturesOnlyToggle = document.querySelector("#pictures-only-toggle");
+    const favoritesOnlyToggle = document.querySelector("#favorites-only-toggle");
+    const favoriteCount = document.querySelector("#favorite-count");
     const highlightToggle = document.querySelector("#highlight-toggle");
     const difficultyInputs = document.querySelectorAll('input[name="difficulty"]');
     const decks = { easy: [], mixed: [], hard: [] };
     const lastShown = { easy: null, mixed: null, hard: null };
+    const picturedSentences = {
+      easy: illustrations.filter((item) => sentences.easy.includes(item.sentence)).map((item) => item.sentence),
+      mixed: illustrations.filter((item) => sentences.mixed.includes(item.sentence)).map((item) => item.sentence),
+      hard: illustrations.filter((item) => sentences.hard.includes(item.sentence)).map((item) => item.sentence)
+    };
+    const picturedDecks = { easy: [], mixed: [], hard: [] };
+    const lastPictured = { easy: null, mixed: null, hard: null };
+    let illustrationDeck = [];
+    let lastIllustration = null;
+    const favoriteStorageKey = "say-r-favorites-v1";
+    const availableSentences = new Set(Object.values(sentences).flat());
+    let favorites = loadFavorites();
+    let favoriteDeck = [];
+    let lastFavorite = null;
+    let currentSentence = null;
 
     function shuffled(items) {
       const result = [...items];
@@ -366,6 +568,23 @@
         .join("");
     }
 
+    function loadFavorites() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(favoriteStorageKey) || "[]");
+        return new Set(saved.filter((sentence) => availableSentences.has(sentence)));
+      } catch {
+        return new Set();
+      }
+    }
+
+    function saveFavorites() {
+      try {
+        localStorage.setItem(favoriteStorageKey, JSON.stringify([...favorites]));
+      } catch {
+        // Favorites still work for this visit if browser storage is unavailable.
+      }
+    }
+
     function nextSentence(difficulty) {
       if (decks[difficulty].length === 0) {
         decks[difficulty] = shuffled(sentences[difficulty]);
@@ -380,17 +599,115 @@
       return sentence;
     }
 
+    function nextPicturedSentence(difficulty) {
+      if (picturedDecks[difficulty].length === 0) {
+        picturedDecks[difficulty] = shuffled(picturedSentences[difficulty]);
+        if (picturedDecks[difficulty][picturedDecks[difficulty].length - 1] === lastPictured[difficulty]
+            && picturedDecks[difficulty].length > 1) {
+          [picturedDecks[difficulty][0], picturedDecks[difficulty][picturedDecks[difficulty].length - 1]] =
+            [picturedDecks[difficulty][picturedDecks[difficulty].length - 1], picturedDecks[difficulty][0]];
+        }
+      }
+
+      const sentence = picturedDecks[difficulty].pop();
+      lastPictured[difficulty] = sentence;
+      return sentence;
+    }
+
+    function nextIllustration() {
+      if (illustrationDeck.length === 0) {
+        illustrationDeck = shuffled(illustrations);
+        if (illustrationDeck[illustrationDeck.length - 1] === lastIllustration && illustrationDeck.length > 1) {
+          [illustrationDeck[0], illustrationDeck[illustrationDeck.length - 1]] =
+            [illustrationDeck[illustrationDeck.length - 1], illustrationDeck[0]];
+        }
+      }
+
+      const illustration = illustrationDeck.pop();
+      lastIllustration = illustration;
+      return illustration;
+    }
+
+    function updateIllustration(sentence) {
+      const matchingIllustration = illustrations.find((item) => item.sentence === sentence);
+      const illustration = matchingIllustration || nextIllustration();
+      lastIllustration = illustration;
+      illustrationElement.src = illustration.src;
+    }
+
+    function nextFavoriteSentence() {
+      if (favoriteDeck.length === 0) {
+        favoriteDeck = shuffled([...favorites]);
+        if (favoriteDeck[favoriteDeck.length - 1] === lastFavorite && favoriteDeck.length > 1) {
+          [favoriteDeck[0], favoriteDeck[favoriteDeck.length - 1]] =
+            [favoriteDeck[favoriteDeck.length - 1], favoriteDeck[0]];
+        }
+      }
+
+      const sentence = favoriteDeck.pop();
+      lastFavorite = sentence;
+      return sentence;
+    }
+
     function selectedDifficulty() {
       return document.querySelector('input[name="difficulty"]:checked').value;
     }
 
     function showNewSentence() {
-      const sentence = nextSentence(selectedDifficulty());
-      sentenceElement.innerHTML = renderSentence(sentence);
+      if (favoritesOnlyToggle.checked) {
+        currentSentence = nextFavoriteSentence();
+      } else if (picturesOnlyToggle.checked) {
+        currentSentence = nextPicturedSentence(selectedDifficulty());
+      } else {
+        currentSentence = nextSentence(selectedDifficulty());
+      }
+      sentenceElement.innerHTML = renderSentence(currentSentence);
+      updateIllustration(currentSentence);
+      updateFavoriteControls();
     }
 
     function updateHighlighting() {
       sentenceCard.classList.toggle("highlights-off", !highlightToggle.checked);
+    }
+
+    function updateFavoriteControls() {
+      const isFavorite = currentSentence !== null && favorites.has(currentSentence);
+      favoriteToggle.textContent = isFavorite ? "★" : "☆";
+      favoriteToggle.setAttribute("aria-pressed", String(isFavorite));
+      favoriteToggle.setAttribute("aria-label", isFavorite
+        ? "Remove sentence from favorites"
+        : "Add sentence to favorites");
+      favoriteToggle.title = favoriteToggle.getAttribute("aria-label");
+
+      favoriteCount.textContent = String(favorites.size);
+      favoritesOnlyToggle.disabled = favorites.size === 0;
+      if (favorites.size === 0) {
+        favoritesOnlyToggle.checked = false;
+      }
+      difficultyInputs.forEach((input) => {
+        input.disabled = favoritesOnlyToggle.checked;
+      });
+    }
+
+    function toggleFavorite() {
+      if (favorites.has(currentSentence)) {
+        favorites.delete(currentSentence);
+      } else {
+        favorites.add(currentSentence);
+      }
+
+      favoriteDeck = [];
+      saveFavorites();
+
+      if (favoritesOnlyToggle.checked && !favorites.has(currentSentence)) {
+        if (favorites.size === 0) {
+          favoritesOnlyToggle.checked = false;
+        }
+        showNewSentence();
+        return;
+      }
+
+      updateFavoriteControls();
     }
 
     function validateContent() {
@@ -409,11 +726,41 @@
           if (markers % 2 !== 0 || targetCount < 3 || targetCount > 6) {
             throw new Error(`${difficulty} has a sentence with invalid target markup: ${sentence}`);
           }
+
+          const ending = sentence
+            .split(/;|,\s*|\s+(?:and|but|because|so|then|while|until)\s+/i)
+            .at(-1);
+          if (!ending.includes("*")) {
+            throw new Error(`${difficulty} has an ending without an R target: ${sentence}`);
+          }
         }
+
+        if (picturedSentences[difficulty].length !== 5) {
+          throw new Error(`${difficulty} should contain exactly 5 pictured sentences.`);
+        }
+      }
+
+      if (illustrations.length !== 15
+          || new Set(illustrations.map((item) => item.src)).size !== illustrations.length) {
+        throw new Error("Illustrations should contain exactly 15 unique images.");
       }
     }
 
     newSentenceButton.addEventListener("click", showNewSentence);
+    favoriteToggle.addEventListener("click", toggleFavorite);
+    picturesOnlyToggle.addEventListener("change", () => {
+      if (picturesOnlyToggle.checked) {
+        favoritesOnlyToggle.checked = false;
+        updateFavoriteControls();
+      }
+      showNewSentence();
+    });
+    favoritesOnlyToggle.addEventListener("change", () => {
+      if (favoritesOnlyToggle.checked) {
+        picturesOnlyToggle.checked = false;
+      }
+      showNewSentence();
+    });
     highlightToggle.addEventListener("change", updateHighlighting);
     difficultyInputs.forEach((input) => input.addEventListener("change", showNewSentence));
 
