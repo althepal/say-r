@@ -57,8 +57,10 @@ the sentence's exact array entry.
 - **Pictures Only** cycles through mapped sentences at the selected difficulty.
 - Normal mode can show any sentence. An unpictured sentence receives a random
   illustration, so it must not be mistaken for an exact visual match.
-- **Find a sentence** expands into a small search across all three difficulty
+- The small search icon beside Difficulty opens a floating search across all three difficulty
   levels and opens the selected result at its correct difficulty.
+- The back arrow beside **New sentence** returns to previously shown sentences and
+  becomes unavailable when there is no earlier sentence.
 - Easy is the first-run default, and the last selected difficulty is restored
   after a refresh.
 - **Favorites only** uses the browser's local storage. Editing a sentence

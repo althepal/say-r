@@ -26,6 +26,7 @@
     }
 
     main {
+      position: relative;
       width: min(960px, 100%);
       text-align: center;
     }
@@ -42,39 +43,37 @@
       font-size: 1rem;
     }
 
-    .sentence-search {
-      width: min(520px, 100%);
-      margin: -14px auto 22px;
-      color: #5d6678;
-      font-size: 0.9rem;
-    }
-
-    .sentence-search summary {
-      display: inline-block;
-      padding: 5px 8px;
-      border-radius: 7px;
+    .search-toggle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      align-self: center;
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      border: 1px solid #d8d4ca;
+      border-radius: 50%;
+      color: #586174;
+      background: rgba(255, 255, 255, 0.82);
+      font: inherit;
       cursor: pointer;
-      list-style: none;
-      user-select: none;
+      box-shadow: 0 2px 6px rgba(36, 43, 63, 0.08);
     }
 
-    .sentence-search summary::-webkit-details-marker {
-      display: none;
-    }
-
-    .sentence-search summary::before {
-      content: "⌕";
-      margin-right: 6px;
-      font-size: 1.05em;
-    }
-
-    .sentence-search summary:hover,
-    .sentence-search[open] summary {
+    .search-toggle:hover,
+    .search-toggle[aria-expanded="true"] {
       color: #3659b5;
       background: #edf1fb;
+      box-shadow: 0 3px 9px rgba(36, 43, 63, 0.12);
     }
 
-    .sentence-search summary:focus-visible,
+    .search-toggle svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .search-toggle:focus-visible,
+    .search-close:focus-visible,
     #sentence-search-input:focus-visible,
     .search-result:focus-visible {
       outline: 3px solid #f5a623;
@@ -82,12 +81,62 @@
     }
 
     .search-panel {
-      margin-top: 8px;
-      padding: 10px;
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      z-index: 5;
+      width: min(390px, calc(100vw - 48px));
+      padding: 14px;
       border: 1px solid #d8d4ca;
-      border-radius: 12px;
+      border-radius: 14px;
       background: #fff;
-      box-shadow: 0 8px 24px rgba(36, 43, 63, 0.08);
+      box-shadow: 0 16px 40px rgba(36, 43, 63, 0.18);
+      color: #5d6678;
+      font-size: 0.9rem;
+      text-align: left;
+    }
+
+    .difficulty-row {
+      position: relative;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      gap: 8px;
+      width: fit-content;
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    .search-panel[hidden] {
+      display: none;
+    }
+
+    .search-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      color: #17233f;
+      font-weight: 800;
+    }
+
+    .search-close {
+      width: 30px;
+      height: 30px;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      color: #697184;
+      background: transparent;
+      font: inherit;
+      font-size: 1.25rem;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .search-close:hover {
+      color: #17233f;
+      background: #f1f2f5;
     }
 
     #sentence-search-input {
@@ -102,7 +151,6 @@
 
     .search-status {
       margin: 7px 3px 0;
-      text-align: left;
       font-size: 0.78rem;
     }
 
@@ -313,9 +361,51 @@
       cursor: not-allowed;
     }
 
+    .sentence-actions {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      width: min(418px, 100%);
+      margin: 22px auto 0;
+    }
+
+    #previous-sentence {
+      display: grid;
+      flex: 0 0 48px;
+      place-items: center;
+      padding: 0;
+      border: 1px solid #d8d4ca;
+      border-radius: 14px;
+      color: #586174;
+      background: rgba(255, 255, 255, 0.9);
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(36, 43, 63, 0.1);
+    }
+
+    #previous-sentence:hover:not(:disabled) {
+      color: #3659b5;
+      background: #edf1fb;
+    }
+
+    #previous-sentence:disabled {
+      opacity: 0.38;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    #previous-sentence svg {
+      width: 21px;
+      height: 21px;
+    }
+
+    #previous-sentence:focus-visible {
+      outline: 3px solid #f5a623;
+      outline-offset: 3px;
+    }
+
     #new-sentence {
-      width: min(360px, 100%);
-      margin-top: 22px;
+      flex: 1;
+      width: auto;
       padding: 16px 24px;
       border: 0;
       border-radius: 14px;
@@ -375,6 +465,12 @@
         width: 100%;
       }
 
+      .difficulty-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        width: 100%;
+      }
+
       .difficulty-options label {
         min-width: 0;
         padding-inline: 8px;
@@ -407,27 +503,34 @@
     <h1>Say R!</h1>
     <p class="subtitle">Read the silly sentence out loud.</p>
 
-    <details class="sentence-search" id="sentence-search">
-      <summary>Find a sentence</summary>
-      <div class="search-panel">
-        <label for="sentence-search-input">Search all sentences</label>
-        <input id="sentence-search-input" type="search" autocomplete="off" placeholder="Try squirrel, cereal, or fire">
-        <p class="search-status" id="search-status" aria-live="polite">Type a word or phrase.</p>
-        <div class="search-results" id="search-results"></div>
-      </div>
-    </details>
-
     <fieldset>
       <legend>Difficulty</legend>
-      <div class="difficulty-options">
-        <input type="radio" name="difficulty" id="easy" value="easy" checked>
-        <label for="easy">Easy</label>
+      <div class="difficulty-row">
+        <div class="difficulty-options">
+          <input type="radio" name="difficulty" id="easy" value="easy" checked>
+          <label for="easy">Easy</label>
 
-        <input type="radio" name="difficulty" id="mixed" value="mixed">
-        <label for="mixed">Mixed</label>
+          <input type="radio" name="difficulty" id="mixed" value="mixed">
+          <label for="mixed">Mixed</label>
 
-        <input type="radio" name="difficulty" id="hard" value="hard">
-        <label for="hard">Hard</label>
+          <input type="radio" name="difficulty" id="hard" value="hard">
+          <label for="hard">Hard</label>
+        </div>
+        <button class="search-toggle" id="search-toggle" type="button" aria-expanded="false" aria-controls="search-panel" aria-label="Find a sentence" title="Find a sentence">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"></circle>
+            <path d="m15.5 15.5 4 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"></path>
+          </svg>
+        </button>
+        <div class="search-panel" id="search-panel" hidden>
+          <div class="search-heading">
+            <label for="sentence-search-input">Find a sentence</label>
+            <button class="search-close" id="search-close" type="button" aria-label="Close search">×</button>
+          </div>
+          <input id="sentence-search-input" type="search" autocomplete="off" placeholder="Try squirrel, cereal, or fire">
+          <p class="search-status" id="search-status" aria-live="polite">Type a word or phrase.</p>
+          <div class="search-results" id="search-results"></div>
+        </div>
       </div>
     </fieldset>
 
@@ -441,7 +544,14 @@
       </figure>
     </section>
 
-    <button id="new-sentence" type="button">New sentence</button>
+    <div class="sentence-actions">
+      <button id="previous-sentence" type="button" disabled aria-label="Previous sentence" title="Previous sentence">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M19 12H5m6-6-6 6 6 6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+        </svg>
+      </button>
+      <button id="new-sentence" type="button">New sentence</button>
+    </div>
 
     <div class="practice-controls">
       <label class="small-control">
@@ -795,13 +905,16 @@
     const sentenceElement = document.querySelector("#sentence");
     const sentenceCard = document.querySelector(".sentence-card");
     const illustrationElement = document.querySelector("#illustration");
+    const previousSentenceButton = document.querySelector("#previous-sentence");
     const newSentenceButton = document.querySelector("#new-sentence");
     const favoriteToggle = document.querySelector("#favorite-toggle");
     const picturesOnlyToggle = document.querySelector("#pictures-only-toggle");
     const favoritesOnlyToggle = document.querySelector("#favorites-only-toggle");
     const favoriteCount = document.querySelector("#favorite-count");
     const highlightToggle = document.querySelector("#highlight-toggle");
-    const searchDetails = document.querySelector("#sentence-search");
+    const searchToggle = document.querySelector("#search-toggle");
+    const searchPanel = document.querySelector("#search-panel");
+    const searchClose = document.querySelector("#search-close");
     const searchInput = document.querySelector("#sentence-search-input");
     const searchStatus = document.querySelector("#search-status");
     const searchResults = document.querySelector("#search-results");
@@ -831,6 +944,7 @@
     let favoriteDeck = [];
     let lastFavorite = null;
     let currentSentence = null;
+    const sentenceHistory = [];
 
     function shuffled(items) {
       const result = [...items];
@@ -961,11 +1075,37 @@
       return document.querySelector('input[name="difficulty"]:checked').value;
     }
 
-    function showSentence(sentence) {
+    function difficultyForSentence(sentence) {
+      return Object.keys(sentences).find((difficulty) => sentences[difficulty].includes(sentence));
+    }
+
+    function updatePreviousSentenceControl() {
+      previousSentenceButton.disabled = sentenceHistory.length === 0;
+    }
+
+    function showSentence(sentence, { remember = true } = {}) {
+      if (remember && currentSentence !== null && currentSentence !== sentence) {
+        sentenceHistory.push(currentSentence);
+      }
       currentSentence = sentence;
       sentenceElement.innerHTML = renderSentence(currentSentence);
       updateIllustration(currentSentence);
       updateFavoriteControls();
+      updatePreviousSentenceControl();
+    }
+
+    function showPreviousSentence() {
+      const previousSentence = sentenceHistory.pop();
+      if (!previousSentence) return;
+
+      const difficulty = difficultyForSentence(previousSentence);
+      if (difficulty) {
+        difficultyInputs.forEach((input) => {
+          input.checked = input.value === difficulty;
+        });
+        saveDifficulty(difficulty);
+      }
+      showSentence(previousSentence, { remember: false });
     }
 
     function showNewSentence() {
@@ -988,7 +1128,18 @@
       });
       saveDifficulty(difficulty);
       showSentence(sentence);
-      searchDetails.open = false;
+      closeSearch();
+    }
+
+    function openSearch() {
+      searchPanel.hidden = false;
+      searchToggle.setAttribute("aria-expanded", "true");
+      searchInput.focus();
+    }
+
+    function closeSearch() {
+      searchPanel.hidden = true;
+      searchToggle.setAttribute("aria-expanded", "false");
     }
 
     function updateSearchResults() {
@@ -1097,6 +1248,7 @@
       }
     }
 
+    previousSentenceButton.addEventListener("click", showPreviousSentence);
     newSentenceButton.addEventListener("click", showNewSentence);
     favoriteToggle.addEventListener("click", toggleFavorite);
     picturesOnlyToggle.addEventListener("change", () => {
@@ -1114,11 +1266,14 @@
     });
     highlightToggle.addEventListener("change", updateHighlighting);
     searchInput.addEventListener("input", updateSearchResults);
-    searchDetails.addEventListener("toggle", () => {
-      if (searchDetails.open) {
-        searchInput.focus();
+    searchToggle.addEventListener("click", () => {
+      if (searchPanel.hidden) {
+        openSearch();
+      } else {
+        closeSearch();
       }
     });
+    searchClose.addEventListener("click", closeSearch);
     difficultyInputs.forEach((input) => input.addEventListener("change", () => {
       saveDifficulty(input.value);
       showNewSentence();
