@@ -367,84 +367,84 @@
   <script>
     "use strict";
 
-    // Asterisks mark the R-practice words that will be highlighted.
+    // Asterisks mark vocalic/post-vocalic R practice words (not initial R words).
     // These are deliberately hand-written rather than assembled from random parts.
     const sentences = {
       easy: [
-        "The *nervous* *deer* chose a *purple* *sweater* because the *freezer* felt *better*.",
+        "The *nervous* *deer* *wore* a *purple* *sweater* and *curled* up by the *freezer*.",
         "The *teacher* *heard* a *hamster* *whisper*, “The *burger* is in the *freezer*.”",
         "A *cheerful* *mermaid* *served* *cereal* to a *bird* with *earrings*.",
         "The *weird* *drummer* *discovered* a *turnip* *under* his *dessert*.",
         "A *furry* *monster* put *butter* on a *mirror* and called it *dinner*.",
-        "A *thirsty* *wizard* *searched* every *theater*, hunting a missing *fern*.",
-        "The *deer* *heard* the *steer* *whisper* that the *pier* was haunted.",
+        "A *thirsty* *wizard* *searched* the *theater* and found a missing *fern*.",
+        "The *deer* *heard* a *steer* *whisper*, ‘*There's* a *monster* by the *pier*.’",
         "My *sister* *measured* a *burger* with an *earring* and seemed *surprised*.",
         "The *bearded* *surfer* *turned* his *sweater* into a *hamster* *shelter*.",
         "A *nervous* *bird* *cheered* when the *teacher* dropped *her* *dessert*.",
-        "The *perfect* *drummer* hid *cereal* in every *winter* mitten.",
-        "A *purple* *hamster* *discovered* that *ferns* make bad *dinner* guests.",
+        "The *perfect* *drummer* *served* *cereal* in a *winter* mitten.",
+        "A *purple* *hamster* *served* *ferns* to its *dinner* guests.",
         "The *fearful* *hamster* *cheered* when the *furry* *monster* sneezed.",
         "A *mermaid* *whispered* to the *deer* *during* *dinner*, “Please pass the *butter*.”",
         "The *bearded* *wizard* *heard* a *bird* singing inside the *mirror*.",
         "The *teacher* *turned* *her* *sweater* inside out and found a *fern*.",
-        "Some *cereal* *near* the *mirror* made my *sister* *nervous*.",
+        "*Cereal* by the *mirror* made my *sister* *nervous*.",
         "A *purple* *hamster* *discovered* a tiny *burger* beneath the *fern*.",
         "The *teacher* found *her* *earring* inside the *hamster's* *dinner*.",
         "A *furry* *bird* *feared* the *weird* *beard* in the *mirror*.",
         "The *surfer* *served* *cereal* to a *monster* *during* *winter*.",
-        "My *sister* *heard* a *mermaid* *cheer* *near* the end of the *pier*.",
+        "My *sister* *heard* a *mermaid* *cheer* *under* the *pier*.",
         "The *thirsty* *deer* *turned* a *fern* into a *perfect* *birdhouse*.",
         "A *nervous* *teacher* *discovered* a *hamster* asleep in the *freezer*."
       ],
       mixed: [
         "A *nervous* *pirate* *parked* his *cart* at the *fair* and made a *pear* buy a ticket.",
         "The *cheerful* *bear* *served* *burgers* at the *fair*, but a food critic gave them one *star*.",
-        "A *deer* *parked* a *cart* *near* the *pier* because the wheels felt *scared* of sand.",
-        "The *purple* *vampire* *feared* the *fire*, so candles made him *nervous*.",
+        "The *deer* *parked* a *cart* *near* the *pier*, and its wheels *feared* sand.",
+        "The *purple* *vampire* *feared* the *fire*, but even the candles grew *nervous*.",
         "The *teacher* found a *hairy* *pear* hiding *under* a *chair* and gave it a *haircut*.",
         "A *furry* *shark* *wore* a *scarf* to *dinner* to impress a *burger*.",
-        "The *mermaid* *shared* *cereal* with a *dinosaur* at the *shore*, but nobody brought the *fork*.",
+        "A *mermaid* *shared* *cereal* with a *dinosaur* at the *shore*, but nobody brought a *fork*.",
         "A *thirsty* *horse* *carried* a *burger* to the *barn*, then ate the *wrapper*.",
-        "The *weird* *pirate* *parked* a *scooter* by the *fire*; it demanded a *driver*.",
+        "The *weird* *pirate* *parked* a *cart* by the *fire*, and it demanded a *driver*.",
         "My *sister* *scared* a *bear* with a *sparkly* *jar* labeled “Fresh *Air*.”",
         "The *nervous* *hamster* *wore* a *scarf* to the *fair* because its tail felt *bare*.",
         "A *cheerful* *farmer* *discovered* *corn* in his *sweater* and blamed the *scarecrow*.",
-        "The *bird* *stared* at a *vampire* *near* the *campfire* until both felt *awkward*.",
-        "A *teacher* *carried* a *fiery* cake onto the *porch*; the candles ordered a *fire extinguisher*.",
+        "A *bird* *stared* at a *vampire* by the *campfire* until they both felt *awkward*.",
+        "A *teacher* *carried* a *fiery* cake onto the *porch*, and the candles *ordered* a *fire extinguisher*.",
         "The *furry* *monster* *snored* through a *stormy* *morning*, waking the *popcorn*.",
-        "A *mermaid* *wore* a *square* hat on the *pier*; a fashion *reporter* called it *perfect*.",
+        "A *mermaid* *wore* a *square* hat on the *pier*, and a fashion *reporter* called it *perfect*.",
         "The *bearded* *dinosaur* *shared* a *pear* with my *sister*, then ate the *silverware*.",
-        "A *tired* *bear* *heard* a *bird* by the *barn* and ordered fluffy *earplugs*.",
-        "The *surfer* found a *hair* in his *burger* at the *park* and asked for its *manager*.",
-        "A *purple* *horse* *admired* a *star* at *dinner* until *dessert* arrived.",
+        "A *tired* *bear* *heard* a *bird* by the *barn* and *ordered* fluffy *earplugs*.",
+        "The *surfer* found a *hair* in his *burger* at the *park* and asked *for* its *manager*.",
+        "A *purple* *horse* *admired* a *star* at *dinner* until *dessert* *arrived*.",
         "The *vampire* *served* *popcorn* to the *teacher* at the *shore* *during* sunrise.",
-        "A *scary fairy* *steered* a *cart* through the *park* toward a *purple carousel*.",
+        "A *scary fairy* *steered* a *cart* through the *park* *toward* a *purple carousel*.",
         "The *deer* *carried* *firewood* to the *farmer's* *barn*, but it demanded a *driver*.",
         "A *cheerful* *pirate* hid a *guitar* *under* the *stairs*, then chose the wrong *stair*."
       ],
       hard: [
         "The *world's* *worst* *squirrel* *hurled* a *pearl* at a *walrus* in a bathrobe.",
-        "A *curly-haired* *girl* *twirled* around the *world*, got dizzy, and blamed *her* *skirt*.",
-        "The *squirrel* *curled* up beside a *pearl* during a *thunderstorm* because the *weather* seemed rude.",
-        "The *girl* *tried* to *twirl* thirty *pearls* before breakfast; the *cereal* declared itself the *winner*.",
+        "A *curly-haired* *girl* *twirled* *around* the *world*, got dizzy, and blamed *her* *skirt*.",
+        "The *squirrel* *curled* *around* a *pearl* *during* a *thunderstorm* because the *weather* felt *personal*.",
+        "The *girl* *tried* to *twirl* *thirty* *pearls*, and the *cereal* was the *winner*.",
         "An *early* *bird* *hurled* *corn* across the *world* and missed the *Earth*.",
-        "A *purple* *squirrel* *wore* a *pearl* necklace to impress the girl; she *preferred* a *burger*.",
+        "A *purple* *squirrel* *wore* a *pearl* necklace but *preferred* a *burger*.",
         "The *world's* *curliest* *squirrel* *twirled* on a *surfboard* while the waves demanded an *encore*.",
         "A *curly-haired* *girl* found a *pearl* in *her* *cereal* and blamed the *server*.",
         "The *squirrel* *hurled* a *burger* past the *world's* smallest *barn* and called it *airmail*.",
-        "An *early* *bird* *twirled* a *scarf* around a *farmer*; he thanked the *weather*.",
+        "An *early* *bird* *twirled* a *scarf* *around* a *farmer*, and he thanked the *weather*.",
         "A *curly-haired* *girl* *carried* a *pearl* through the *storm* because the *purse* was full.",
-        "The *squirrel* *curled* up inside a *purple* *jar* and called it a *resort*.",
-        "The *girl* *hurled* *popcorn* at a *squirrel* wearing *pearls*; it asked for *more*.",
-        "A *pearl* rolled around the *world* while the *squirrel* *snored* through the *entire* rescue.",
+        "The *squirrel* *curled* up in a *purple* *jar*, a private *resort*.",
+        "The *girl* *hurled* *popcorn* at a *squirrel* *wearing* *pearls*, and it asked *for* *more*.",
+        "A *pearl* crossed the *world* while the *squirrel* *snored* through the *entire* *adventure*.",
         "The *curly* *squirrel* *twirled* beside the *world's* *largest* *fire*.",
-        "The *girl* *wore* thirty *pearls* while *steering* a *cart*; the cart demanded *turning* lessons.",
-        "The *squirrel* *hurled* a *pearl* into the *farmer's* *corn* and shouted, “*World record!*”",
-        "The *world's* *earliest* *bird* *curled* up near the *fire* and blamed the *weather* for oversleeping.",
-        "A *curly* *girl* *shared* a *pear* with a *squirrel*, then charged it a *quarter*.",
-        "The *squirrel* *twirled* a *fork* while *stirring* *corn*; the *server* ducked.",
-        "The *girl* *carried* three *pearls* around the *world* in a *purple* *purse*.",
-        "A *curly* *squirrel* *wore* a *scarf* made of *pearls* and admired itself in the *mirror*.",
+        "The *girl* *wore* *thirty* *pearls* while *steering* a *cart*, and the *cart* demanded *turning* lessons.",
+        "The *squirrel* *hurled* a *pearl* into the *farmer's* *corn* and shocked the *world*.",
+        "The *world's* *earliest* *bird* *curled* up *near* the *fire* and blamed the *weather* *for* *oversleeping*.",
+        "A *curly* *girl* *shared* a *pear* with a *squirrel*, then *charged* it a *quarter*.",
+        "The *squirrel* *twirled* a *fork* while *stirring* *corn*, and the *server* ducked.",
+        "The *girl* *carried* three *pearls* *around* the *world* in a *purple* *purse*.",
+        "A *curly* *squirrel* *wore* a *scarf* made of *pearls* and *admired* itself in the *mirror*.",
         "An *early* *bird* shocked the *girl* by *hurling* a *pearl* into the *cereal*.",
         "The *world's* smallest *squirrel* *curled* up beside the *fire* and *ordered* a tiny *burger*."
       ]
@@ -492,6 +492,46 @@
         sentence: sentences.easy[22]
       },
       {
+        src: "assets/illustrations/deer-steer-monster-pier.webp",
+        sentence: sentences.easy[6]
+      },
+      {
+        src: "assets/illustrations/bird-teacher-dessert.webp",
+        sentence: sentences.easy[9]
+      },
+      {
+        src: "assets/illustrations/drummer-cereal-mitten.webp",
+        sentence: sentences.easy[10]
+      },
+      {
+        src: "assets/illustrations/hamster-fern-dinner.webp",
+        sentence: sentences.easy[11]
+      },
+      {
+        src: "assets/illustrations/hamster-monster-sneeze.webp",
+        sentence: sentences.easy[12]
+      },
+      {
+        src: "assets/illustrations/mermaid-deer-butter.webp",
+        sentence: sentences.easy[13]
+      },
+      {
+        src: "assets/illustrations/wizard-bird-mirror.webp",
+        sentence: sentences.easy[14]
+      },
+      {
+        src: "assets/illustrations/teacher-sweater-fern.webp",
+        sentence: sentences.easy[15]
+      },
+      {
+        src: "assets/illustrations/cereal-mirror-sister.webp",
+        sentence: sentences.easy[16]
+      },
+      {
+        src: "assets/illustrations/teacher-earring-hamster.webp",
+        sentence: sentences.easy[18]
+      },
+      {
         src: "assets/illustrations/pirate-pear-ticket.webp",
         sentence: sentences.mixed[0]
       },
@@ -532,6 +572,46 @@
         sentence: sentences.mixed[17]
       },
       {
+        src: "assets/illustrations/deer-cart-pier.webp",
+        sentence: sentences.mixed[2]
+      },
+      {
+        src: "assets/illustrations/vampire-fire-candles.webp",
+        sentence: sentences.mixed[3]
+      },
+      {
+        src: "assets/illustrations/horse-burger-wrapper.webp",
+        sentence: sentences.mixed[7]
+      },
+      {
+        src: "assets/illustrations/pirate-cart-fire.webp",
+        sentence: sentences.mixed[8]
+      },
+      {
+        src: "assets/illustrations/sister-bear-air-jar.webp",
+        sentence: sentences.mixed[9]
+      },
+      {
+        src: "assets/illustrations/hamster-scarf-fair.webp",
+        sentence: sentences.mixed[10]
+      },
+      {
+        src: "assets/illustrations/bird-vampire-campfire.webp",
+        sentence: sentences.mixed[12]
+      },
+      {
+        src: "assets/illustrations/monster-storm-popcorn.webp",
+        sentence: sentences.mixed[14]
+      },
+      {
+        src: "assets/illustrations/surfer-hair-burger.webp",
+        sentence: sentences.mixed[18]
+      },
+      {
+        src: "assets/illustrations/purple-horse-star-dessert.webp",
+        sentence: sentences.mixed[19]
+      },
+      {
         src: "assets/illustrations/squirrel-walrus.webp",
         sentence: sentences.hard[0]
       },
@@ -570,6 +650,46 @@
       {
         src: "assets/illustrations/tiny-squirrel-fire-burger.webp",
         sentence: sentences.hard[23]
+      },
+      {
+        src: "assets/illustrations/squirrel-pearl-thunderstorm.webp",
+        sentence: sentences.hard[2]
+      },
+      {
+        src: "assets/illustrations/squirrel-pearls-burger.webp",
+        sentence: sentences.hard[5]
+      },
+      {
+        src: "assets/illustrations/girl-pearl-cereal-server.webp",
+        sentence: sentences.hard[7]
+      },
+      {
+        src: "assets/illustrations/bird-scarf-farmer.webp",
+        sentence: sentences.hard[9]
+      },
+      {
+        src: "assets/illustrations/girl-pearl-storm-purse.webp",
+        sentence: sentences.hard[10]
+      },
+      {
+        src: "assets/illustrations/pearl-world-squirrel-adventure.webp",
+        sentence: sentences.hard[13]
+      },
+      {
+        src: "assets/illustrations/squirrel-world-fire.webp",
+        sentence: sentences.hard[14]
+      },
+      {
+        src: "assets/illustrations/girl-pearls-cart.webp",
+        sentence: sentences.hard[15]
+      },
+      {
+        src: "assets/illustrations/squirrel-pearl-farmer-corn.webp",
+        sentence: sentences.hard[16]
+      },
+      {
+        src: "assets/illustrations/early-bird-fire-weather.webp",
+        sentence: sentences.hard[17]
       }
     ];
 
@@ -783,7 +903,7 @@
         for (const sentence of sentences[difficulty]) {
           const markers = (sentence.match(/\*/g) || []).length;
           const targetCount = markers / 2;
-          if (markers % 2 !== 0 || targetCount < 3 || targetCount > 6) {
+          if (markers % 2 !== 0 || targetCount < 3) {
             throw new Error(`${difficulty} has a sentence with invalid target markup: ${sentence}`);
           }
 
@@ -795,14 +915,14 @@
           }
         }
 
-        if (picturedSentences[difficulty].length !== 10) {
-          throw new Error(`${difficulty} should contain exactly 10 pictured sentences.`);
+        if (picturedSentences[difficulty].length !== 20) {
+          throw new Error(`${difficulty} should contain exactly 20 pictured sentences.`);
         }
       }
 
-      if (illustrations.length !== 30
+      if (illustrations.length !== 60
           || new Set(illustrations.map((item) => item.src)).size !== illustrations.length) {
-        throw new Error("Illustrations should contain exactly 30 unique images.");
+        throw new Error("Illustrations should contain exactly 60 unique images.");
       }
     }
 
