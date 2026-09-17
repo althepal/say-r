@@ -472,6 +472,26 @@
         sentence: sentences.easy[17]
       },
       {
+        src: "assets/illustrations/deer-sweater-freezer.webp",
+        sentence: sentences.easy[0]
+      },
+      {
+        src: "assets/illustrations/mermaid-cereal-bird-earrings.webp",
+        sentence: sentences.easy[2]
+      },
+      {
+        src: "assets/illustrations/wizard-theater-fern.webp",
+        sentence: sentences.easy[5]
+      },
+      {
+        src: "assets/illustrations/sister-burger-earring.webp",
+        sentence: sentences.easy[7]
+      },
+      {
+        src: "assets/illustrations/deer-fern-birdhouse.webp",
+        sentence: sentences.easy[22]
+      },
+      {
         src: "assets/illustrations/pirate-pear-ticket.webp",
         sentence: sentences.mixed[0]
       },
@@ -492,6 +512,26 @@
         sentence: sentences.mixed[21]
       },
       {
+        src: "assets/illustrations/bear-burgers-food-critic.webp",
+        sentence: sentences.mixed[1]
+      },
+      {
+        src: "assets/illustrations/farmer-corn-sweater-scarecrow.webp",
+        sentence: sentences.mixed[11]
+      },
+      {
+        src: "assets/illustrations/teacher-cake-fire-extinguisher.webp",
+        sentence: sentences.mixed[13]
+      },
+      {
+        src: "assets/illustrations/mermaid-square-hat-reporter.webp",
+        sentence: sentences.mixed[15]
+      },
+      {
+        src: "assets/illustrations/bear-bird-earplugs.webp",
+        sentence: sentences.mixed[17]
+      },
+      {
         src: "assets/illustrations/squirrel-walrus.webp",
         sentence: sentences.hard[0]
       },
@@ -510,6 +550,26 @@
       {
         src: "assets/illustrations/squirrel-fork-corn.webp",
         sentence: sentences.hard[19]
+      },
+      {
+        src: "assets/illustrations/girl-world-skirt.webp",
+        sentence: sentences.hard[1]
+      },
+      {
+        src: "assets/illustrations/squirrel-surfboard-encore.webp",
+        sentence: sentences.hard[6]
+      },
+      {
+        src: "assets/illustrations/squirrel-purple-jar-resort.webp",
+        sentence: sentences.hard[11]
+      },
+      {
+        src: "assets/illustrations/girl-popcorn-squirrel-pearls.webp",
+        sentence: sentences.hard[12]
+      },
+      {
+        src: "assets/illustrations/tiny-squirrel-fire-burger.webp",
+        sentence: sentences.hard[23]
       }
     ];
 
@@ -735,14 +795,14 @@
           }
         }
 
-        if (picturedSentences[difficulty].length !== 5) {
-          throw new Error(`${difficulty} should contain exactly 5 pictured sentences.`);
+        if (picturedSentences[difficulty].length !== 10) {
+          throw new Error(`${difficulty} should contain exactly 10 pictured sentences.`);
         }
       }
 
-      if (illustrations.length !== 15
+      if (illustrations.length !== 30
           || new Set(illustrations.map((item) => item.src)).size !== illustrations.length) {
-        throw new Error("Illustrations should contain exactly 15 unique images.");
+        throw new Error("Illustrations should contain exactly 30 unique images.");
       }
     }
 
