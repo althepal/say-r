@@ -138,7 +138,7 @@ remain obvious in the final square.
    at approximately quality 82.
 5. Save it under `assets/illustrations/` with a short descriptive filename.
 6. Add the exact sentence mapping to the `illustrations` array in `index.html`.
-7. Verify that Pictures Only shows the correct matching image and that each
+7. Verify that every sentence shows its correct matching image and that each
    difficulty has 25 illustrated sentences.
 
 The key lesson from the first pass: do not generate edge-to-edge landscape

@@ -54,9 +54,8 @@ Final illustrations are 640 × 640 WebP files in `assets/illustrations/`.
 The `illustrations` array in `index.html` maps each file to a sentence by using
 the sentence's exact array entry.
 
-- **Pictures Only** cycles through mapped sentences at the selected difficulty.
-- Normal mode can show any sentence. Every current sentence has an exact
-  matching illustration.
+- Every current sentence has an exact matching illustration. If a future
+  sentence lacks one, the app temporarily shows a random illustration.
 - The small search icon beside Difficulty opens a floating search across all three difficulty
   levels and opens the selected result at its correct difficulty.
 - The back arrow beside **New sentence** returns to previously shown sentences and
@@ -87,7 +86,7 @@ After generating an image:
 4. Save it in `assets/illustrations/` with a descriptive filename.
 5. Add its sentence mapping to `illustrations` in `index.html`.
 6. Update `IMAGE_GENERATION_NOTES.md`.
-7. Reload the app and test Pictures Only at all three difficulties.
+7. Reload the app and verify the matching image at all three difficulties.
 
 `IMAGE_GENERATION_NOTES.md` contains the established visual prompt, the current
 sentence-to-file mappings, and more detailed image-production guidance.
@@ -99,8 +98,8 @@ The current JavaScript validation expects:
 - 25 unique sentences in each of Easy, Mixed, and Hard.
 - At least three marked targets per sentence, with no missed vocalic-R words.
 - An R target in the last phrase or clause.
-- The configured pictured-sentence count for every difficulty.
+- Unique image paths, with no sentence mapped more than once.
 - A unique image path for every illustration mapping.
 
-If the illustration set grows, update the pictured-count and total-image
-assertions in `validateContent()` together with the mappings.
+When the illustration set changes, keep its mappings synchronized with the
+sentence arrays.

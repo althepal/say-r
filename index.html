@@ -560,11 +560,6 @@
       </label>
 
       <label class="small-control">
-        <input id="pictures-only-toggle" type="checkbox">
-        Pictures only
-      </label>
-
-      <label class="small-control">
         <input id="favorites-only-toggle" type="checkbox" disabled>
         Favorites only (<span id="favorite-count">0</span>)
       </label>
@@ -971,7 +966,6 @@
     const previousSentenceButton = document.querySelector("#previous-sentence");
     const newSentenceButton = document.querySelector("#new-sentence");
     const favoriteToggle = document.querySelector("#favorite-toggle");
-    const picturesOnlyToggle = document.querySelector("#pictures-only-toggle");
     const favoritesOnlyToggle = document.querySelector("#favorites-only-toggle");
     const favoriteCount = document.querySelector("#favorite-count");
     const highlightToggle = document.querySelector("#highlight-toggle");
@@ -984,13 +978,6 @@
     const difficultyInputs = document.querySelectorAll('input[name="difficulty"]');
     const decks = { easy: [], mixed: [], hard: [] };
     const lastShown = { easy: null, mixed: null, hard: null };
-    const picturedSentences = {
-      easy: illustrations.filter((item) => sentences.easy.includes(item.sentence)).map((item) => item.sentence),
-      mixed: illustrations.filter((item) => sentences.mixed.includes(item.sentence)).map((item) => item.sentence),
-      hard: illustrations.filter((item) => sentences.hard.includes(item.sentence)).map((item) => item.sentence)
-    };
-    const picturedDecks = { easy: [], mixed: [], hard: [] };
-    const lastPictured = { easy: null, mixed: null, hard: null };
     let illustrationDeck = [];
     let lastIllustration = null;
     const favoriteStorageKey = "say-r-favorites-v1";
@@ -1102,21 +1089,6 @@
       return sentence;
     }
 
-    function nextPicturedSentence(difficulty) {
-      if (picturedDecks[difficulty].length === 0) {
-        picturedDecks[difficulty] = shuffled(picturedSentences[difficulty]);
-        if (picturedDecks[difficulty][picturedDecks[difficulty].length - 1] === lastPictured[difficulty]
-            && picturedDecks[difficulty].length > 1) {
-          [picturedDecks[difficulty][0], picturedDecks[difficulty][picturedDecks[difficulty].length - 1]] =
-            [picturedDecks[difficulty][picturedDecks[difficulty].length - 1], picturedDecks[difficulty][0]];
-        }
-      }
-
-      const sentence = picturedDecks[difficulty].pop();
-      lastPictured[difficulty] = sentence;
-      return sentence;
-    }
-
     function nextIllustration() {
       if (illustrationDeck.length === 0) {
         illustrationDeck = shuffled(illustrations);
@@ -1194,8 +1166,6 @@
       let sentence;
       if (favoritesOnlyToggle.checked) {
         sentence = nextFavoriteSentence();
-      } else if (picturesOnlyToggle.checked) {
-        sentence = nextPicturedSentence(selectedDifficulty());
       } else {
         sentence = nextSentence(selectedDifficulty());
       }
@@ -1203,7 +1173,6 @@
     }
 
     function showSearchResult({ difficulty, sentence }) {
-      picturesOnlyToggle.checked = false;
       favoritesOnlyToggle.checked = false;
       difficultyInputs.forEach((input) => {
         input.checked = input.value === difficulty;
@@ -1319,31 +1288,20 @@
           }
         }
 
-        if (picturedSentences[difficulty].length !== 25) {
-          throw new Error(`${difficulty} should contain exactly 25 pictured sentences.`);
-        }
       }
 
-      if (illustrations.length !== 75
-          || new Set(illustrations.map((item) => item.src)).size !== illustrations.length) {
-        throw new Error("Illustrations should contain exactly 75 unique images.");
+      if (illustrations.length === 0
+          || new Set(illustrations.map((item) => item.src)).size !== illustrations.length
+          || new Set(illustrations.map((item) => item.sentence)).size !== illustrations.length
+          || illustrations.some((item) => !availableSentences.has(item.sentence))) {
+        throw new Error("Illustrations should uniquely map valid sentences to image files.");
       }
     }
 
     previousSentenceButton.addEventListener("click", showPreviousSentence);
     newSentenceButton.addEventListener("click", showNewSentence);
     favoriteToggle.addEventListener("click", toggleFavorite);
-    picturesOnlyToggle.addEventListener("change", () => {
-      if (picturesOnlyToggle.checked) {
-        favoritesOnlyToggle.checked = false;
-        updateFavoriteControls();
-      }
-      showNewSentence();
-    });
     favoritesOnlyToggle.addEventListener("change", () => {
-      if (favoritesOnlyToggle.checked) {
-        picturesOnlyToggle.checked = false;
-      }
       showNewSentence();
     });
     highlightToggle.addEventListener("change", updateHighlighting);
