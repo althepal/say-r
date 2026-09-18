@@ -603,7 +603,8 @@
         "The *surfer* *served* *cereal* to a *monster* *during* *winter*.",
         "My *sister* *heard* a *mermaid* *cheer* *under* the *pier*.",
         "The *thirsty* *deer* *turned* a *fern* into a *perfect* *birdhouse*.",
-        "A *nervous* *teacher* *discovered* a *hamster* asleep in the *freezer*."
+        "A *nervous* *teacher* *discovered* a *hamster* asleep in the *freezer*.",
+        "The *shark* *wore* a *purple* *shirt* and *served* *corn* to a *starfish*."
       ],
       mixed: [
         "A *nervous* *pirate* *parked* his *cart* at the *fair* and made a *pear* buy a ticket.",
@@ -629,7 +630,8 @@
         "The *vampire* *served* *popcorn* to the *teacher* at the *shore* *during* sunrise.",
         "A *scary fairy* *steered* a *cart* through the *park* *toward* a *purple carousel*.",
         "The *deer* *carried* *firewood* to the *farmer's* *barn*, but it demanded a *driver*.",
-        "A *cheerful* *pirate* hid a *guitar* *under* the *stairs*, then chose the wrong *stair*."
+        "A *cheerful* *pirate* hid a *guitar* *under* the *stairs*, then chose the wrong *stair*.",
+        "*After* the *turtle* *stirred* *yogurt* with a *fork*, a *bird* asked *for* *more*."
       ],
       hard: [
         "The *world's* *worst* *squirrel* *hurled* a *pearl* at a *walrus* in a bathrobe.",
@@ -655,7 +657,8 @@
         "The *girl* *carried* three *pearls* *around* the *world* in a *purple* *purse*.",
         "A *curly* *squirrel* *wore* a *scarf* made of *pearls* and *admired* itself in the *mirror*.",
         "An *early* *bird* shocked the *girl* by *hurling* a *pearl* into the *cereal*.",
-        "The *world's* smallest *squirrel* *curled* up beside the *fire* and *ordered* a tiny *burger*."
+        "The *world's* smallest *squirrel* *curled* up beside the *fire* and *ordered* a tiny *burger*.",
+        "The *squirrel's* *purple* *convertible* *swerved* *around* a *burger* and *parked* by the *harbor*."
       ]
     };
 
@@ -899,6 +902,66 @@
       {
         src: "assets/illustrations/early-bird-fire-weather.webp",
         sentence: sentences.hard[17]
+      },
+      {
+        src: "assets/illustrations/bird-beard-mirror.webp",
+        sentence: sentences.easy[19]
+      },
+      {
+        src: "assets/illustrations/surfer-cereal-monster-winter.webp",
+        sentence: sentences.easy[20]
+      },
+      {
+        src: "assets/illustrations/sister-mermaid-pier.webp",
+        sentence: sentences.easy[21]
+      },
+      {
+        src: "assets/illustrations/teacher-hamster-asleep-freezer.webp",
+        sentence: sentences.easy[23]
+      },
+      {
+        src: "assets/illustrations/shark-purple-shirt-corn-starfish.webp",
+        sentence: sentences.easy[24]
+      },
+      {
+        src: "assets/illustrations/mermaid-dinosaur-cereal.webp",
+        sentence: sentences.mixed[6]
+      },
+      {
+        src: "assets/illustrations/vampire-popcorn-teacher-sunrise.webp",
+        sentence: sentences.mixed[20]
+      },
+      {
+        src: "assets/illustrations/deer-firewood-farmer.webp",
+        sentence: sentences.mixed[22]
+      },
+      {
+        src: "assets/illustrations/pirate-guitar-stairs.webp",
+        sentence: sentences.mixed[23]
+      },
+      {
+        src: "assets/illustrations/turtle-yogurt-bird.webp",
+        sentence: sentences.mixed[24]
+      },
+      {
+        src: "assets/illustrations/girl-pear-squirrel-quarter.webp",
+        sentence: sentences.hard[18]
+      },
+      {
+        src: "assets/illustrations/girl-pearls-world-purse.webp",
+        sentence: sentences.hard[20]
+      },
+      {
+        src: "assets/illustrations/squirrel-pearl-scarf-mirror.webp",
+        sentence: sentences.hard[21]
+      },
+      {
+        src: "assets/illustrations/bird-pearl-cereal.webp",
+        sentence: sentences.hard[22]
+      },
+      {
+        src: "assets/illustrations/squirrel-convertible-burger-harbor.webp",
+        sentence: sentences.hard[24]
       }
     ];
 
@@ -932,6 +995,7 @@
     let lastIllustration = null;
     const favoriteStorageKey = "say-r-favorites-v1";
     const difficultyStorageKey = "say-r-difficulty-v1";
+    const currentSentenceStorageKey = "say-r-current-sentence-v1";
     const availableSentences = new Set(Object.values(sentences).flat());
     const searchableSentences = Object.entries(sentences).flatMap(([difficulty, entries]) =>
       entries.map((sentence) => ({
@@ -1004,6 +1068,23 @@
         localStorage.setItem(difficultyStorageKey, difficulty);
       } catch {
         // The selected difficulty still works for this visit if storage is unavailable.
+      }
+    }
+
+    function loadCurrentSentence() {
+      try {
+        const saved = localStorage.getItem(currentSentenceStorageKey);
+        return availableSentences.has(saved) ? saved : null;
+      } catch {
+        return null;
+      }
+    }
+
+    function saveCurrentSentence(sentence) {
+      try {
+        localStorage.setItem(currentSentenceStorageKey, sentence);
+      } catch {
+        // The current sentence still works for this visit if storage is unavailable.
       }
     }
 
@@ -1088,6 +1169,7 @@
         sentenceHistory.push(currentSentence);
       }
       currentSentence = sentence;
+      saveCurrentSentence(currentSentence);
       sentenceElement.innerHTML = renderSentence(currentSentence);
       updateIllustration(currentSentence);
       updateFavoriteControls();
@@ -1214,8 +1296,8 @@
 
     function validateContent() {
       for (const difficulty of ["easy", "mixed", "hard"]) {
-        if (sentences[difficulty].length !== 24) {
-          throw new Error(`${difficulty} should contain exactly 24 sentences.`);
+        if (sentences[difficulty].length !== 25) {
+          throw new Error(`${difficulty} should contain exactly 25 sentences.`);
         }
 
         if (new Set(sentences[difficulty]).size !== sentences[difficulty].length) {
@@ -1237,14 +1319,14 @@
           }
         }
 
-        if (picturedSentences[difficulty].length !== 20) {
-          throw new Error(`${difficulty} should contain exactly 20 pictured sentences.`);
+        if (picturedSentences[difficulty].length !== 25) {
+          throw new Error(`${difficulty} should contain exactly 25 pictured sentences.`);
         }
       }
 
-      if (illustrations.length !== 60
+      if (illustrations.length !== 75
           || new Set(illustrations.map((item) => item.src)).size !== illustrations.length) {
-        throw new Error("Illustrations should contain exactly 60 unique images.");
+        throw new Error("Illustrations should contain exactly 75 unique images.");
       }
     }
 
@@ -1285,7 +1367,12 @@
       input.checked = input.value === savedDifficulty;
     });
     updateHighlighting();
-    showNewSentence();
+    const savedSentence = loadCurrentSentence();
+    if (savedSentence) {
+      showSentence(savedSentence, { remember: false });
+    } else {
+      showNewSentence();
+    }
   </script>
 </body>
 </html>

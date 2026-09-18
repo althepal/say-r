@@ -31,7 +31,7 @@ around ordinary emphasis or initial-R words.
 
 ## Writing sentences
 
-Each difficulty contains exactly 24 hand-written sentences. Keep sentences:
+Each difficulty contains exactly 25 hand-written sentences. Keep sentences:
 
 - Clear enough for a child to understand on the first read.
 - Short, playful, and genuinely funny rather than random or confusing.
@@ -55,14 +55,15 @@ The `illustrations` array in `index.html` maps each file to a sentence by using
 the sentence's exact array entry.
 
 - **Pictures Only** cycles through mapped sentences at the selected difficulty.
-- Normal mode can show any sentence. An unpictured sentence receives a random
-  illustration, so it must not be mistaken for an exact visual match.
+- Normal mode can show any sentence. Every current sentence has an exact
+  matching illustration.
 - The small search icon beside Difficulty opens a floating search across all three difficulty
   levels and opens the selected result at its correct difficulty.
 - The back arrow beside **New sentence** returns to previously shown sentences and
   becomes unavailable when there is no earlier sentence.
 - Easy is the first-run default, and the last selected difficulty is restored
   after a refresh.
+- The current sentence is restored after a refresh.
 - **Favorites only** uses the browser's local storage. Editing a sentence
   changes its stored identity, so an old favorite may disappear.
 - **Highlight R words** only changes presentation; it does not change the deck.
@@ -95,7 +96,7 @@ sentence-to-file mappings, and more detailed image-production guidance.
 
 The current JavaScript validation expects:
 
-- 24 unique sentences in each of Easy, Mixed, and Hard.
+- 25 unique sentences in each of Easy, Mixed, and Hard.
 - At least three marked targets per sentence, with no missed vocalic-R words.
 - An R target in the last phrase or clause.
 - The configured pictured-sentence count for every difficulty.

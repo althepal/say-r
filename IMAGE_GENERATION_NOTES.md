@@ -6,14 +6,14 @@ the app. It is intended as a handoff for a future Codex session.
 ## Current state
 
 - The approved 15-image base is commit `17cd61d` on `main`.
-- A second batch added 15 matched images, and the latest batch added 30 more.
-- There are 60 matched illustrations: 20 Easy, 20 Mixed, and 20 Hard.
+- A second batch added 15 matched images, a third added 30, and the latest
+  batch added the final 15.
+- There are 75 matched illustrations: 25 Easy, 25 Mixed, and 25 Hard.
 - Final assets live in `assets/illustrations/`.
 - Every final asset is a 640 x 640 WebP.
-- The second batch's source PNGs remain under
-  `~/.codex/generated_images/01a0ade3-c1f0-75a3-9e06-520c0b4684d4/`.
-- The latest batch's source PNGs remain under
-  `~/.codex/generated_images/01a0afdb-979a-7b03-a9e3-734f0b1cb863/`.
+- The high-resolution source PNGs were intentionally deleted after the final
+  WebPs were saved and committed. Regenerate from the documented prompts if a
+  future image needs to be replaced.
 - `index.html` maps each asset directly to its exact sentence in the
   `illustrations` array.
 - The images appear in a square side panel on desktop and below the sentence on
@@ -66,6 +66,11 @@ remain obvious in the final square.
 - `teacher-sweater-fern.webp` — “The teacher turned her sweater inside out and found a fern.” Show the teacher holding the inside-out sweater with a fern emerging from it.
 - `cereal-mirror-sister.webp` — “Cereal by the mirror made my sister nervous.” Show the nervous young woman, cereal bowl, and standing mirror together.
 - `teacher-earring-hamster.webp` — “The teacher found her earring inside the hamster's dinner.” Show the teacher lifting a visible earring from the hamster's dinner bowl.
+- `bird-beard-mirror.webp` — “A furry bird feared the weird beard in the mirror.” Show the real bird without a beard and its bearded reflection.
+- `surfer-cereal-monster-winter.webp` — “The surfer served cereal to a monster during winter.” Show the winter-clothed surfer offering cereal to the friendly monster in snow.
+- `sister-mermaid-pier.webp` — “My sister heard a mermaid cheer under the pier.” Show the girl listening from the pier and the mermaid cheering below.
+- `teacher-hamster-asleep-freezer.webp` — “A nervous teacher discovered a hamster asleep in the freezer.” Keep the sleeping hamster cozy and safe inside the open freezer.
+- `shark-purple-shirt-corn-starfish.webp` — “The shark wore a purple shirt and served corn to a starfish.” Clearly show the shirt, plated corn, and starfish.
 
 ### Mixed
 
@@ -89,6 +94,11 @@ remain obvious in the final square.
 - `monster-storm-popcorn.webp` — “The furry monster snored through a stormy morning, waking the popcorn.” Show the sleeping monster and surprised, expressive popcorn during a rainstorm.
 - `surfer-hair-burger.webp` — “The surfer found a hair in his burger at the park and asked for the manager.” Show the surfer lifting the hair from the burger at a park food stand.
 - `purple-horse-star-dessert.webp` — “A purple horse admired a star at dinner until dessert arrived.” Show the horse, star, dinner setting, and spectacular dessert arriving on a cart.
+- `mermaid-dinosaur-cereal.webp` — “A mermaid shared cereal with a dinosaur at the shore, but nobody brought a fork.” Show the cereal and puzzled pair, with no fork or other utensil.
+- `vampire-popcorn-teacher-sunrise.webp` — “The vampire served popcorn to the teacher at the shore during sunrise.” Show the friendly vampire offering the popcorn on the sunrise beach.
+- `deer-firewood-farmer.webp` — “The deer carried firewood to the farmer's barn, but it demanded a driver.” Show the farmer riding like a driver on the deer's firewood bundle near the barn.
+- `pirate-guitar-stairs.webp` — “A cheerful pirate hid a guitar under the stairs, then chose the wrong stair.” Show the hidden guitar and the pirate pointing at a different stair.
+- `turtle-yogurt-bird.webp` — “After the turtle stirred yogurt with a fork, a bird asked for more.” Show the turtle stirring and the eager bird holding out an empty bowl.
 
 ### Hard
 
@@ -112,6 +122,11 @@ remain obvious in the final square.
 - `girl-pearls-cart.webp` — “The girl wore thirty pearls while steering a cart, and the cart demanded turning lessons.” Show the pearl-covered girl steering a cart with expressive eyes and crooked wheels.
 - `squirrel-pearl-farmer-corn.webp` — “The squirrel hurled a pearl into the farmer's corn and shocked the world.” Show the airborne pearl, squirrel, surprised farmer with corn, and expressive globe.
 - `early-bird-fire-weather.webp` — “The world's earliest bird curled up near the fire and blamed the weather for oversleeping.” Show the sleepy bird pointing at an annoyed raincloud beside the fire and sunrise clock.
+- `girl-pear-squirrel-quarter.webp` — “A curly girl shared a pear with a squirrel, then charged it a quarter.” Show the shared pear and the squirrel offering one plain coin.
+- `girl-pearls-world-purse.webp` — “The girl carried three pearls around the world in a purple purse.” Show exactly three pearls in the open purple purse above a friendly globe.
+- `squirrel-pearl-scarf-mirror.webp` — “A curly squirrel wore a scarf made of pearls and admired itself in the mirror.” Clearly show the pearl scarf and reflection.
+- `bird-pearl-cereal.webp` — “An early bird shocked the girl by hurling a pearl into the cereal.” Freeze the pearl in the air just above the cereal at sunrise.
+- `squirrel-convertible-burger-harbor.webp` — “The squirrel's purple convertible swerved around a burger and parked by the harbor.” Show the full car, oversized burger, curved tire path, and harbor.
 
 ## Finishing workflow
 
@@ -124,7 +139,7 @@ remain obvious in the final square.
 5. Save it under `assets/illustrations/` with a short descriptive filename.
 6. Add the exact sentence mapping to the `illustrations` array in `index.html`.
 7. Verify that Pictures Only shows the correct matching image and that each
-   difficulty has 20 illustrated sentences.
+   difficulty has 25 illustrated sentences.
 
 The key lesson from the first pass: do not generate edge-to-edge landscape
 compositions and hope to crop them later. Put every joke-critical subject and
