@@ -11,6 +11,10 @@ no package manager, dependency install, build step, server, or framework.
 
 Open `index.html` in a browser. After changing the file, reload the page.
 
+For visual QA, use the subtle **All sentences** link at the bottom of the app,
+or open `index.html?qa=1`. This shows every sentence beside its mapped image on
+one page and uses the same source data as the regular app.
+
 The page validates its content at startup and throws an error in the browser
 console if a sentence deck or illustration mapping breaks a required rule.
 

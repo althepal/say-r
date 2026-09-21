@@ -361,6 +361,116 @@
       cursor: not-allowed;
     }
 
+    .qa-link {
+      display: inline-block;
+      margin-top: 24px;
+      color: #9297a3;
+      font-size: 0.72rem;
+      text-decoration: none;
+    }
+
+    .qa-link:hover {
+      color: #5d6678;
+      text-decoration: underline;
+    }
+
+    .qa-link:focus-visible,
+    .qa-back:focus-visible {
+      outline: 3px solid #f5a623;
+      outline-offset: 3px;
+    }
+
+    .qa-view {
+      width: min(1040px, 100%);
+      padding: 16px 0 40px;
+      text-align: left;
+    }
+
+    .qa-view[hidden] {
+      display: none;
+    }
+
+    .qa-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+
+    .qa-header h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+    }
+
+    .qa-back {
+      color: #697184;
+      font-size: 0.85rem;
+    }
+
+    .qa-group + .qa-group {
+      margin-top: 42px;
+    }
+
+    .qa-group h2 {
+      margin: 0 0 14px;
+      text-transform: capitalize;
+    }
+
+    .qa-count {
+      color: #9297a3;
+      font-size: 0.75em;
+      font-weight: 500;
+    }
+
+    .qa-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+      gap: 20px;
+    }
+
+    .qa-card {
+      overflow: hidden;
+      border: 1px solid #dedbd3;
+      border-radius: 14px;
+      background: #fff;
+      box-shadow: 0 3px 10px rgba(36, 43, 63, 0.06);
+    }
+
+    .qa-card img,
+    .qa-image-missing {
+      width: 100%;
+      aspect-ratio: 1;
+      display: block;
+      object-fit: cover;
+      background: #e9eef5;
+    }
+
+    .qa-image-missing {
+      display: grid;
+      place-items: center;
+      color: #7a8292;
+      font-size: 0.8rem;
+    }
+
+    .qa-card-copy {
+      padding: 13px 14px 14px;
+    }
+
+    .qa-card p {
+      margin: 0;
+      font-size: 1.05rem;
+      font-weight: 650;
+      line-height: 1.4;
+    }
+
+    .qa-meta {
+      display: block;
+      margin-top: 8px;
+      overflow-wrap: anywhere;
+      color: #9297a3;
+      font-size: 0.68rem;
+    }
+
     .sentence-actions {
       display: flex;
       justify-content: center;
@@ -489,6 +599,10 @@
         margin-bottom: 0;
         border-radius: 0;
       }
+
+      .qa-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -499,7 +613,7 @@
   </style>
 </head>
 <body>
-  <main>
+  <main id="practice-app">
     <h1>Say R!</h1>
     <p class="subtitle">Read the silly sentence out loud.<br>These sentences practice vocalic R sounds.</p>
 
@@ -564,6 +678,16 @@
         Favorites only (<span id="favorite-count">0</span>)
       </label>
     </div>
+
+    <a class="qa-link" href="index.html?qa=1">All sentences</a>
+  </main>
+
+  <main class="qa-view" id="qa-view" hidden>
+    <header class="qa-header">
+      <h1>All sentences</h1>
+      <a class="qa-back" href="index.html">Back to app</a>
+    </header>
+    <div id="qa-groups"></div>
   </main>
 
   <noscript>This page needs JavaScript to make new sentences.</noscript>
@@ -961,6 +1085,9 @@
     ];
 
     const sentenceElement = document.querySelector("#sentence");
+    const practiceApp = document.querySelector("#practice-app");
+    const qaView = document.querySelector("#qa-view");
+    const qaGroups = document.querySelector("#qa-groups");
     const sentenceCard = document.querySelector(".sentence-card");
     const illustrationElement = document.querySelector("#illustration");
     const previousSentenceButton = document.querySelector("#previous-sentence");
@@ -1298,6 +1425,59 @@
       }
     }
 
+    function showQaGallery() {
+      practiceApp.hidden = true;
+      qaView.hidden = false;
+
+      for (const [difficulty, entries] of Object.entries(sentences)) {
+        const group = document.createElement("section");
+        group.className = "qa-group";
+
+        const heading = document.createElement("h2");
+        heading.innerHTML = `${escapeHtml(difficulty)} <span class="qa-count">${entries.length}</span>`;
+        group.append(heading);
+
+        const grid = document.createElement("div");
+        grid.className = "qa-grid";
+
+        entries.forEach((sentence, index) => {
+          const card = document.createElement("article");
+          card.className = "qa-card";
+          const illustration = illustrations.find((item) => item.sentence === sentence);
+
+          if (illustration) {
+            const image = document.createElement("img");
+            image.src = illustration.src;
+            image.alt = "";
+            image.loading = "lazy";
+            image.decoding = "async";
+            card.append(image);
+          } else {
+            const missing = document.createElement("div");
+            missing.className = "qa-image-missing";
+            missing.textContent = "No matching image";
+            card.append(missing);
+          }
+
+          const copy = document.createElement("div");
+          copy.className = "qa-card-copy";
+          const sentenceText = document.createElement("p");
+          sentenceText.innerHTML = renderSentence(sentence);
+          copy.append(sentenceText);
+
+          const meta = document.createElement("span");
+          meta.className = "qa-meta";
+          meta.textContent = `${index + 1} · ${illustration ? illustration.src.split("/").at(-1) : "unmapped"}`;
+          copy.append(meta);
+          card.append(copy);
+          grid.append(card);
+        });
+
+        group.append(grid);
+        qaGroups.append(group);
+      }
+    }
+
     previousSentenceButton.addEventListener("click", showPreviousSentence);
     newSentenceButton.addEventListener("click", showNewSentence);
     favoriteToggle.addEventListener("click", toggleFavorite);
@@ -1320,16 +1500,20 @@
     }));
 
     validateContent();
-    const savedDifficulty = loadDifficulty();
-    difficultyInputs.forEach((input) => {
-      input.checked = input.value === savedDifficulty;
-    });
-    updateHighlighting();
-    const savedSentence = loadCurrentSentence();
-    if (savedSentence) {
-      showSentence(savedSentence, { remember: false });
+    if (new URLSearchParams(window.location.search).has("qa")) {
+      showQaGallery();
     } else {
-      showNewSentence();
+      const savedDifficulty = loadDifficulty();
+      difficultyInputs.forEach((input) => {
+        input.checked = input.value === savedDifficulty;
+      });
+      updateHighlighting();
+      const savedSentence = loadCurrentSentence();
+      if (savedSentence) {
+        showSentence(savedSentence, { remember: false });
+      } else {
+        showNewSentence();
+      }
     }
   </script>
 </body>
