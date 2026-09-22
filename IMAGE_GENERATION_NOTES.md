@@ -109,7 +109,7 @@ remain obvious in the final square.
 - `squirrel-fork-corn.webp` — “The squirrel twirled a fork while stirring corn, and the server ducked.” Clearly show the squirrel, twirling fork, corn, and ducking server in one compact scene.
 - `girl-world-skirt.webp` — “A curly-haired girl twirled around the world, got dizzy, and blamed her skirt.” Show the dizzy girl beside a small globe, pointing at her swishing skirt.
 - `squirrel-surfboard-encore.webp` — “The world's curliest squirrel twirled on a surfboard while the waves demanded an encore.” Show the curly squirrel performing while expressive waves applaud.
-- `squirrel-purple-jar-resort.webp` — “The squirrel curled up in a purple jar, a private resort.” Make the transparent purple jar look like a tiny vacation resort.
+- `squirrel-purple-jar-resort.webp` — “The squirrel curled up in a purple jar and ordered room service.” Make the transparent purple jar look like a tiny vacation resort.
 - `girl-popcorn-squirrel-pearls.webp` — “The girl hurled popcorn at a squirrel wearing pearls, and it asked for more.” Keep the toss playful and show the squirrel's pearls and bowl clearly.
 - `tiny-squirrel-fire-burger.webp` — “The world's smallest squirrel curled up beside the fire and ordered a tiny burger.” Make the miniature scale of both squirrel and burger obvious.
 - `squirrel-pearl-thunderstorm.webp` — “The squirrel curled around a pearl during a thunderstorm because the weather felt personal.” Show the squirrel hugging the pearl and glaring at an expressive storm cloud from a cozy tree hollow.
