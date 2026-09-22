@@ -8,7 +8,7 @@ the app. It is intended as a handoff for a future Codex session.
 - The approved 15-image base is commit `17cd61d` on `main`.
 - A second batch added 15 matched images, a third added 30, and the latest
   batch added the final 15.
-- There are 75 matched illustrations: 25 Easy, 25 Mixed, and 25 Hard.
+- There are 75 matched illustrations: 25 Easy, 25 Medium, and 25 Hard.
 - Final assets live in `assets/illustrations/`.
 - Every final asset is a 640 x 640 WebP.
 - The high-resolution source PNGs were intentionally deleted after the final
@@ -72,7 +72,7 @@ remain obvious in the final square.
 - `teacher-hamster-asleep-freezer.webp` — “A nervous teacher discovered a hamster asleep in the freezer.” Keep the sleeping hamster cozy and safe inside the open freezer.
 - `shark-purple-shirt-corn-starfish.webp` — “The shark wore a purple shirt and served corn to a starfish.” Clearly show the shirt, plated corn, and starfish.
 
-### Mixed
+### Medium
 
 - `pirate-pear-ticket.webp` — “A nervous pirate parked his cart at the fair and made a pear buy a ticket.” Show the pirate, parked wooden cart, and anthropomorphic pear receiving a fair ticket.
 - `hairy-pear-haircut.webp` — “The teacher found a hairy pear hiding under a chair and gave it a haircut.” Show the teacher giving a comically hairy pear a careful haircut beside the chair.

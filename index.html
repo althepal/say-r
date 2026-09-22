@@ -625,7 +625,7 @@
           <label for="easy">Easy</label>
 
           <input type="radio" name="difficulty" id="mixed" value="mixed">
-          <label for="mixed">Mixed</label>
+          <label for="mixed">Medium</label>
 
           <input type="radio" name="difficulty" id="hard" value="hard">
           <label for="hard">Hard</label>
@@ -1103,6 +1103,7 @@
     const searchStatus = document.querySelector("#search-status");
     const searchResults = document.querySelector("#search-results");
     const difficultyInputs = document.querySelectorAll('input[name="difficulty"]');
+    const difficultyLabels = { easy: "Easy", mixed: "Medium", hard: "Hard" };
     const decks = { easy: [], mixed: [], hard: [] };
     const lastShown = { easy: null, mixed: null, hard: null };
     let illustrationDeck = [];
@@ -1434,7 +1435,7 @@
         group.className = "qa-group";
 
         const heading = document.createElement("h2");
-        heading.innerHTML = `${escapeHtml(difficulty)} <span class="qa-count">${entries.length}</span>`;
+        heading.innerHTML = `${escapeHtml(difficultyLabels[difficulty])} <span class="qa-count">${entries.length}</span>`;
         group.append(heading);
 
         const grid = document.createElement("div");

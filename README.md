@@ -44,7 +44,7 @@ Each difficulty contains exactly 25 hand-written sentences. Keep sentences:
 - At least three marked R targets, with every vocalic/post-vocalic R word marked.
 - Finished with an R target in the final phrase or clause.
 
-Use common, shorter words for Easy. Mixed can combine several R sound shapes
+Use common, shorter words for Easy. Medium can combine several R sound shapes
 and slightly longer ideas. Hard may use denser sound combinations such as
 `world`, `squirrel`, `twirl`, and `pearl`, but it should still make sense.
 
@@ -99,7 +99,7 @@ sentence-to-file mappings, and more detailed image-production guidance.
 
 The current JavaScript validation expects:
 
-- 25 unique sentences in each of Easy, Mixed, and Hard.
+- 25 unique sentences in each of Easy, Medium, and Hard.
 - At least three marked targets per sentence, with no missed vocalic-R words.
 - An R target in the last phrase or clause.
 - Unique image paths, with no sentence mapped more than once.
