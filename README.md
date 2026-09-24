@@ -75,6 +75,13 @@ Keep the sentence arrays and illustration mappings as the source of truth.
 Generated source PNGs under `~/.codex/generated_images/` are optional working
 files and are not required by the app.
 
+## Analytics
+
+The published page sends privacy-friendly aggregate page views to GoatCounter.
+View the dashboard at `https://say-r-althepal.goatcounter.com`. To exclude a
+browser used for development or QA, open the published app once with
+`#toggle-goatcounter` appended to its URL and follow the confirmation prompt.
+
 ## Adding illustrations
 
 Use one illustration per exact sentence. Keep all joke-critical characters and
