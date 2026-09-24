@@ -1314,6 +1314,7 @@
       searchPanel.hidden = false;
       searchToggle.setAttribute("aria-expanded", "true");
       searchInput.focus();
+      trackAnalyticsEvent("search-opened", "Search opened");
     }
 
     function closeSearch() {
@@ -1351,6 +1352,11 @@
       sentenceCard.classList.toggle("highlights-off", !highlightToggle.checked);
     }
 
+    function trackAnalyticsEvent(path, title) {
+      if (!window.goatcounter?.count) return;
+      window.goatcounter.count({ path, title, event: true, no_session: true });
+    }
+
     function updateFavoriteControls() {
       const isFavorite = currentSentence !== null && favorites.has(currentSentence);
       favoriteToggle.textContent = isFavorite ? "★" : "☆";
@@ -1375,6 +1381,7 @@
         favorites.delete(currentSentence);
       } else {
         favorites.add(currentSentence);
+        trackAnalyticsEvent("favorite-added", "Favorite added");
       }
 
       favoriteDeck = [];
@@ -1480,7 +1487,10 @@
     }
 
     previousSentenceButton.addEventListener("click", showPreviousSentence);
-    newSentenceButton.addEventListener("click", showNewSentence);
+    newSentenceButton.addEventListener("click", () => {
+      showNewSentence();
+      trackAnalyticsEvent("new-sentence", "New sentence");
+    });
     favoriteToggle.addEventListener("click", toggleFavorite);
     favoritesOnlyToggle.addEventListener("change", () => {
       showNewSentence();
@@ -1498,6 +1508,8 @@
     difficultyInputs.forEach((input) => input.addEventListener("change", () => {
       saveDifficulty(input.value);
       showNewSentence();
+      const label = difficultyLabels[input.value];
+      trackAnalyticsEvent(`difficulty-${label.toLowerCase()}`, `Difficulty: ${label}`);
     }));
 
     validateContent();

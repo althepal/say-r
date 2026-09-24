@@ -81,6 +81,12 @@ The published page sends privacy-friendly aggregate page views to GoatCounter.
 View the dashboard at `https://say-r-althepal.goatcounter.com`. To exclude a
 browser used for development or QA, open the published app once with
 `#toggle-goatcounter` appended to its URL and follow the confirmation prompt.
+The app also records anonymous `new-sentence` events for presses of **New
+sentence** and `difficulty-easy`, `difficulty-medium`, or `difficulty-hard`
+events when the selected difficulty changes. It records `favorite-added` when
+a sentence is newly favorited and `search-opened` when search opens. These
+events contain no sentence text, favorite identity, search terms, or other
+user-entered data.
 
 ## Adding illustrations
 
