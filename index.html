@@ -1314,7 +1314,7 @@
       searchPanel.hidden = false;
       searchToggle.setAttribute("aria-expanded", "true");
       searchInput.focus();
-      trackAnalyticsEvent("search-opened", "Search opened");
+      trackAnalyticsEvent("search-opened");
     }
 
     function closeSearch() {
@@ -1352,9 +1352,9 @@
       sentenceCard.classList.toggle("highlights-off", !highlightToggle.checked);
     }
 
-    function trackAnalyticsEvent(path, title) {
-      if (!window.goatcounter?.count) return;
-      window.goatcounter.count({ path, title, event: true, no_session: true });
+    function trackAnalyticsEvent(name) {
+      if (!window.umami?.track) return;
+      window.umami.track(name);
     }
 
     function updateFavoriteControls() {
@@ -1381,7 +1381,7 @@
         favorites.delete(currentSentence);
       } else {
         favorites.add(currentSentence);
-        trackAnalyticsEvent("favorite-added", "Favorite added");
+        trackAnalyticsEvent("favorite-added");
       }
 
       favoriteDeck = [];
@@ -1489,7 +1489,7 @@
     previousSentenceButton.addEventListener("click", showPreviousSentence);
     newSentenceButton.addEventListener("click", () => {
       showNewSentence();
-      trackAnalyticsEvent("new-sentence", "New sentence");
+      trackAnalyticsEvent("new-sentence");
     });
     favoriteToggle.addEventListener("click", toggleFavorite);
     favoritesOnlyToggle.addEventListener("change", () => {
@@ -1509,7 +1509,7 @@
       saveDifficulty(input.value);
       showNewSentence();
       const label = difficultyLabels[input.value];
-      trackAnalyticsEvent(`difficulty-${label.toLowerCase()}`, `Difficulty: ${label}`);
+      trackAnalyticsEvent(`difficulty-${label.toLowerCase()}`);
     }));
 
     validateContent();
@@ -1529,7 +1529,8 @@
       }
     }
   </script>
-  <script data-goatcounter="https://say-r-althepal.goatcounter.com/count"
-          async src="https://gc.zgo.at/count.js"></script>
+  <script defer src="https://cloud.umami.is/script.js"
+          data-website-id="5605d793-d8b8-4613-90ab-2ed0a89f951b"
+          data-domains="althepal.github.io"></script>
 </body>
 </html>

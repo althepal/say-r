@@ -77,10 +77,12 @@ files and are not required by the app.
 
 ## Analytics
 
-The published page sends privacy-friendly aggregate page views to GoatCounter.
-View the dashboard at `https://say-r-althepal.goatcounter.com`. To exclude a
-browser used for development or QA, open the published app once with
-`#toggle-goatcounter` appended to its URL and follow the confirmation prompt.
+The published page sends privacy-friendly aggregate page views to Umami Cloud.
+View the dashboard at `https://cloud.umami.is`. Tracking is restricted to the
+published `althepal.github.io` hostname, so local development is not counted.
+To exclude a browser used for QA, run
+`localStorage.setItem("umami.disabled", "1")` in that browser's developer
+console while the published app is open.
 The app also records anonymous `new-sentence` events for presses of **New
 sentence** and `difficulty-easy`, `difficulty-medium`, or `difficulty-hard`
 events when the selected difficulty changes. It records `favorite-added` when
