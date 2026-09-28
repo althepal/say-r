@@ -1124,6 +1124,7 @@
     let lastFavorite = null;
     let currentSentence = null;
     const sentenceHistory = [];
+    const sentenceHistoryLimit = 50;
 
     function shuffled(items) {
       const result = [...items];
@@ -1267,6 +1268,9 @@
     function showSentence(sentence, { remember = true } = {}) {
       if (remember && currentSentence !== null && currentSentence !== sentence) {
         sentenceHistory.push(currentSentence);
+        if (sentenceHistory.length > sentenceHistoryLimit) {
+          sentenceHistory.shift();
+        }
       }
       currentSentence = sentence;
       saveCurrentSentence(currentSentence);
@@ -1317,9 +1321,18 @@
       trackAnalyticsEvent("search-opened");
     }
 
-    function closeSearch() {
+    function closeSearch({ restoreFocus = true } = {}) {
+      if (searchPanel.hidden) return;
+
+      const focusWasInPanel = searchPanel.contains(document.activeElement);
       searchPanel.hidden = true;
       searchToggle.setAttribute("aria-expanded", "false");
+
+      if (restoreFocus) {
+        searchToggle.focus();
+      } else if (focusWasInPanel) {
+        document.activeElement.blur();
+      }
     }
 
     function updateSearchResults() {
@@ -1398,41 +1411,6 @@
       updateFavoriteControls();
     }
 
-    function validateContent() {
-      for (const difficulty of ["easy", "mixed", "hard"]) {
-        if (sentences[difficulty].length !== 25) {
-          throw new Error(`${difficulty} should contain exactly 25 sentences.`);
-        }
-
-        if (new Set(sentences[difficulty]).size !== sentences[difficulty].length) {
-          throw new Error(`${difficulty} contains a duplicate sentence.`);
-        }
-
-        for (const sentence of sentences[difficulty]) {
-          const markers = (sentence.match(/\*/g) || []).length;
-          const targetCount = markers / 2;
-          if (markers % 2 !== 0 || targetCount < 3) {
-            throw new Error(`${difficulty} has a sentence with invalid target markup: ${sentence}`);
-          }
-
-          const ending = sentence
-            .split(/;|,\s*|\s+(?:and|but|because|so|then|while|until)\s+/i)
-            .at(-1);
-          if (!ending.includes("*")) {
-            throw new Error(`${difficulty} has an ending without an R target: ${sentence}`);
-          }
-        }
-
-      }
-
-      if (illustrations.length === 0
-          || new Set(illustrations.map((item) => item.src)).size !== illustrations.length
-          || new Set(illustrations.map((item) => item.sentence)).size !== illustrations.length
-          || illustrations.some((item) => !availableSentences.has(item.sentence))) {
-        throw new Error("Illustrations should uniquely map valid sentences to image files.");
-      }
-    }
-
     function showQaGallery() {
       practiceApp.hidden = true;
       qaView.hidden = false;
@@ -1504,7 +1482,20 @@
         closeSearch();
       }
     });
-    searchClose.addEventListener("click", closeSearch);
+    searchClose.addEventListener("click", () => closeSearch());
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && !searchPanel.hidden) {
+        event.preventDefault();
+        closeSearch();
+      }
+    });
+    document.addEventListener("click", (event) => {
+      if (!searchPanel.hidden
+          && !searchPanel.contains(event.target)
+          && !searchToggle.contains(event.target)) {
+        closeSearch({ restoreFocus: false });
+      }
+    });
     difficultyInputs.forEach((input) => input.addEventListener("change", () => {
       saveDifficulty(input.value);
       showNewSentence();
@@ -1512,7 +1503,6 @@
       trackAnalyticsEvent(`difficulty-${label.toLowerCase()}`);
     }));
 
-    validateContent();
     if (new URLSearchParams(window.location.search).has("qa")) {
       showQaGallery();
     } else {

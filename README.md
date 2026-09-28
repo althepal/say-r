@@ -15,8 +15,10 @@ For visual QA, use the subtle **All sentences** link at the bottom of the app,
 or open `index.html?qa=1`. This shows every sentence beside its mapped image on
 one page and uses the same source data as the regular app.
 
-The page validates its content at startup and throws an error in the browser
-console if a sentence deck or illustration mapping breaks a required rule.
+Run `node scripts/validate-content.mjs` before pushing content changes. GitHub
+also runs this check automatically on every push and pull request. The check
+validates the sentence decks, target markup, illustration mappings and files,
+and the JavaScript syntax in the app.
 
 ## Speech target
 
@@ -62,8 +64,8 @@ the sentence's exact array entry.
   sentence lacks one, the app temporarily shows a random illustration.
 - The small search icon beside Difficulty opens a floating search across all three difficulty
   levels and opens the selected result at its correct difficulty.
-- The back arrow beside **New sentence** returns to previously shown sentences and
-  becomes unavailable when there is no earlier sentence.
+- The back arrow beside **New sentence** returns through the 50 most recently
+  shown sentences and becomes unavailable when there is no earlier sentence.
 - Easy is the first-run default, and the last selected difficulty is restored
   after a refresh.
 - The current sentence is restored after a refresh.
@@ -112,13 +114,15 @@ sentence-to-file mappings, and more detailed image-production guidance.
 
 ## Content invariants
 
-The current JavaScript validation expects:
+The content validation script expects:
 
 - 25 unique sentences in each of Easy, Medium, and Hard.
-- At least three marked targets per sentence, with no missed vocalic-R words.
+- At least three marked targets per sentence. Missed vocalic-R words still
+  require human review.
 - An R target in the last phrase or clause.
 - Unique image paths, with no sentence mapped more than once.
 - A unique image path for every illustration mapping.
+- An existing image file for every illustration mapping.
 
 When the illustration set changes, keep its mappings synchronized with the
 sentence arrays.
