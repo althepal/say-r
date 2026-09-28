@@ -16,9 +16,11 @@ or open `index.html?qa=1`. This shows every sentence beside its mapped image on
 one page and uses the same source data as the regular app.
 
 Run `node scripts/validate-content.mjs` before pushing content changes. GitHub
-also runs this check automatically on every push and pull request. The check
-validates the sentence decks, target markup, illustration mappings and files,
-and the JavaScript syntax in the app.
+also runs this check automatically on every pull request and every push to
+`main`. The site deploys only after the check passes, so a failed check leaves
+the last working version live. The check validates the sentence decks, target
+markup, illustration mappings and files, quotation marks, image-note
+synchronization, and the JavaScript syntax in the app.
 
 ## Speech target
 
@@ -125,6 +127,8 @@ The content validation script expects:
 - Unique image paths, with no sentence mapped more than once.
 - A unique image path for every illustration mapping.
 - An existing image file for every illustration mapping.
+- Image notes that exactly match all current sentences.
+- Balanced curly double quotation marks, with no curly single quotation marks.
 
 When the illustration set changes, keep its mappings synchronized with the
 sentence arrays.

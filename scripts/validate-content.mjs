@@ -5,7 +5,9 @@ import { fileURLToPath } from "node:url";
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const indexPath = path.join(projectRoot, "index.html");
+const notesPath = path.join(projectRoot, "IMAGE_GENERATION_NOTES.md");
 const html = fs.readFileSync(indexPath, "utf8");
+const notes = fs.readFileSync(notesPath, "utf8");
 const inlineScriptMatch = html.match(/<script>\s*([\s\S]*?)\s*<\/script>/);
 
 if (!inlineScriptMatch) {
@@ -68,8 +70,50 @@ for (const difficulty of expectedDifficulties) {
 }
 
 const availableSentences = new Set(Object.values(sentences).flat());
+const plainSentences = [...availableSentences].map((sentence) => sentence.replaceAll("*", ""));
+const documentedSentences = [...notes.matchAll(/^- `[^`]+` — \*(.+)\* /gm)]
+  .map((match) => match[1]);
 const imagePaths = illustrations.map((item) => item.src);
 const mappedSentences = illustrations.map((item) => item.sentence);
+
+if (documentedSentences.length !== plainSentences.length) {
+  errors.push(
+    `Image notes should document ${plainSentences.length} sentences; found ${documentedSentences.length}.`
+  );
+}
+
+if (new Set(documentedSentences).size !== documentedSentences.length) {
+  errors.push("Image notes contain a duplicate sentence.");
+}
+
+for (const sentence of plainSentences) {
+  if (!documentedSentences.includes(sentence)) {
+    errors.push(`Image notes are missing or differ from this sentence: ${sentence}`);
+  }
+}
+
+for (const sentence of documentedSentences) {
+  if (!plainSentences.includes(sentence)) {
+    errors.push(`Image notes contain an unknown sentence: ${sentence}`);
+  }
+}
+
+for (const [filename, contents] of [
+  ["index.html", html],
+  ["IMAGE_GENERATION_NOTES.md", notes]
+]) {
+  if (/[‘’]/.test(contents)) {
+    errors.push(`${filename} contains curly single quotation marks; use curly double quotes.`);
+  }
+
+  contents.split("\n").forEach((line, index) => {
+    const openingQuotes = (line.match(/“/g) || []).length;
+    const closingQuotes = (line.match(/”/g) || []).length;
+    if (openingQuotes !== closingQuotes) {
+      errors.push(`${filename}:${index + 1} has unbalanced curly double quotation marks.`);
+    }
+  });
+}
 
 if (illustrations.length === 0) {
   errors.push("At least one illustration mapping is required.");
