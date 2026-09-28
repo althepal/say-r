@@ -1108,6 +1108,7 @@
     const lastShown = { easy: null, mixed: null, hard: null };
     let illustrationDeck = [];
     let lastIllustration = null;
+    let preloadedIllustration = null;
     const favoriteStorageKey = "say-r-favorites-v1";
     const difficultyStorageKey = "say-r-difficulty-v1";
     const currentSentenceStorageKey = "say-r-current-sentence-v1";
@@ -1204,15 +1205,20 @@
       }
     }
 
-    function nextSentence(difficulty) {
+    function ensureSentenceDeck(difficulty) {
       if (decks[difficulty].length === 0) {
         decks[difficulty] = shuffled(sentences[difficulty]);
-        if (decks[difficulty][decks[difficulty].length - 1] === lastShown[difficulty]) {
+        const sentenceToAvoid = lastShown[difficulty]
+          || (sentences[difficulty].includes(currentSentence) ? currentSentence : null);
+        if (decks[difficulty][decks[difficulty].length - 1] === sentenceToAvoid) {
           [decks[difficulty][0], decks[difficulty][decks[difficulty].length - 1]] =
             [decks[difficulty][decks[difficulty].length - 1], decks[difficulty][0]];
         }
       }
+    }
 
+    function nextSentence(difficulty) {
+      ensureSentenceDeck(difficulty);
       const sentence = decks[difficulty].pop();
       lastShown[difficulty] = sentence;
       return sentence;
@@ -1239,7 +1245,7 @@
       illustrationElement.src = illustration.src;
     }
 
-    function nextFavoriteSentence() {
+    function ensureFavoriteDeck() {
       if (favoriteDeck.length === 0) {
         favoriteDeck = shuffled([...favorites]);
         if (favoriteDeck[favoriteDeck.length - 1] === lastFavorite && favoriteDeck.length > 1) {
@@ -1247,10 +1253,35 @@
             [favoriteDeck[favoriteDeck.length - 1], favoriteDeck[0]];
         }
       }
+    }
 
+    function nextFavoriteSentence() {
+      ensureFavoriteDeck();
       const sentence = favoriteDeck.pop();
       lastFavorite = sentence;
       return sentence;
+    }
+
+    function preloadNextSentence() {
+      let sentence;
+
+      if (favoritesOnlyToggle.checked) {
+        ensureFavoriteDeck();
+        sentence = favoriteDeck.at(-1);
+      } else {
+        const difficulty = selectedDifficulty();
+        ensureSentenceDeck(difficulty);
+        sentence = decks[difficulty].at(-1);
+      }
+
+      const illustration = illustrations.find((item) => item.sentence === sentence);
+      if (!illustration) {
+        preloadedIllustration = null;
+        return;
+      }
+
+      preloadedIllustration = new Image();
+      preloadedIllustration.src = illustration.src;
     }
 
     function selectedDifficulty() {
@@ -1278,6 +1309,7 @@
       updateIllustration(currentSentence);
       updateFavoriteControls();
       updatePreviousSentenceControl();
+      preloadNextSentence();
     }
 
     function showPreviousSentence() {

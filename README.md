@@ -69,6 +69,8 @@ the sentence's exact array entry.
 - Easy is the first-run default, and the last selected difficulty is restored
   after a refresh.
 - The current sentence is restored after a refresh.
+- The next queued sentence's illustration is preloaded when a matching image
+  is available.
 - **Favorites only** uses the browser's local storage. Editing a sentence
   changes its stored identity, so an old favorite may disappear.
 - **Highlight R words** only changes presentation; it does not change the deck.
